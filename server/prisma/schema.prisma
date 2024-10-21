@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PurchaseDetails {
+  purchaseDetailsId BigInt    @id @default(autoincrement())
+  productId         String
+  purchaseId        String
+  quantity          Int
+  unitCost          Decimal   @db.Decimal(10, 2)
+  totalCost         Decimal   @db.Decimal(10, 2)
+  added_at          DateTime? @db.Timestamp(0)
+  updated_at        DateTime? @db.Timestamp(0)
+
+  product  Products  @relation(fields: [productId], references: [productId])
+  purchase Purchases @relation(fields: [purchaseId], references: [purchaseId])
+
+  @@index([productId], name: "purchasedetails_productid_index")
+  @@index([purchaseId], name: "purchasedetails_purchaseid_index")
+}
+
+model Suppliers {
+  supplierId Int     @id @default(autoincrement())
+  name       String
+  email      String?
+  phone      String?
+  address    String?
+
+  products Products[]
+}
+
+model Users {
+  userId     String @id
+  userTypeId Int
+  username   String
+  email      String
+  password   String
+
+  userType  UserTypes   @relation(fields: [userTypeId], references: [userTypeintId])
+  purchases Purchases[]
+  sales     Sales[]
+  Employees Employees[]
+
+  @@index([userTypeId], name: "users_usertypeid_index")
+}
+
+model Sales {
+  saleId    String @id
+  productId String
+  userId    String
+
+  user        Users         @relation(fields: [userId], references: [userId])
+  product     Products      @relation(fields: [productId], references: [productId])
+  saleDetails SaleDetails[]
+
+  @@index([productId], name: "sales_productid_index")
+  @@index([userId], name: "sales_userid_index")
+}
+
+model PurchasePredictions {
+  purchasePredictionsId BigInt    @id @default(autoincrement())
+  predictionDate        DateTime
+  created_at            DateTime?
+
+  predictionDetails PredictionDetails[]
+}
+
+model Purchases {
+  purchaseId      String    @id
+  userId          String
+  purchaseStateId Int
+  created_at      DateTime?
+  updated_at      DateTime?
+
+  user            Users             @relation(fields: [userId], references: [userId])
+  purchaseState   PurchaseStates    @relation(fields: [purchaseStateId], references: [purchaseStateId])
+  purchaseDetails PurchaseDetails[]
+
+  @@index([userId], name: "purchases_userid_index")
+  @@index([purchaseStateId], name: "purchases_purchasestateid_index")
+}
+
+model ProductTypes {
+  productTypeId Int    @id @default(autoincrement())
+  type          String
+
+  products Products[]
+}
+
+model SaleDetails {
+  saleDetailsId BigInt    @id @default(autoincrement())
+  productId     String
+  saleId        String
+  timestamp     DateTime
+  quantity      Int
+  unitPrice     Decimal   @db.Decimal(10, 2)
+  totalAmount   Decimal   @db.Decimal(10, 2)
+  created_at    DateTime?
+  updated_at    DateTime?
+
+  product Products @relation(fields: [productId], references: [productId])
+  sale    Sales    @relation(fields: [saleId], references: [saleId])
+
+  @@index([productId], name: "saledetails_productid_index")
+  @@index([saleId], name: "saledetails_saleid_index")
+}
+
+model Employees {
+  employeeId      Int     @id @default(autoincrement())
+  userId          String
+  positionId      Int
+  shiftId         Int
+  name            String
+  paternalSurname String?
+  maternalSurname String?
+  email           String?
+  phone           String?
+
+  user     Users     @relation(fields: [userId], references: [userId])
+  position Positions @relation(fields: [positionId], references: [positionId])
+  shift    Shifts    @relation(fields: [shiftId], references: [shiftId])
+
+  @@index([userId], name: "employees_userid_index")
+  @@index([positionId], name: "employees_positionid_index")
+  @@index([shiftId], name: "employees_shiftid_index")
+}
+
+model PredictionDetails {
+  predictionDetailsId  BigInt @id @default(autoincrement())
+  productId            String
+  purchasePredictionId BigInt
+  predictedQuantity    Int
+
+  product            Products            @relation(fields: [productId], references: [productId])
+  purchasePrediction PurchasePredictions @relation(fields: [purchasePredictionId], references: [purchasePredictionsId])
+
+  @@index([productId], name: "predictiondetails_productid_index")
+  @@index([purchasePredictionId], name: "predictiondetails_purchasepredictionid_index")
+}
+
+model Products {
+  productId     String   @id
+  productTypeId Int
+  supplierId    Int
+  name          String
+  price         Decimal  @db.Decimal(10, 2)
+  rating        Decimal? @db.Decimal(2, 1)
+  stockQuantity Int
+  minimumStock  Int
+  maximumStock  Int
+
+  supplier          Suppliers           @relation(fields: [supplierId], references: [supplierId])
+  productType       ProductTypes        @relation(fields: [productTypeId], references: [productTypeId])
+  sales             Sales[]
+  purchaseDetails   PurchaseDetails[]
+  saleDetails       SaleDetails[]
+  predictionDetails PredictionDetails[]
+
+  @@index([productTypeId], name: "products_producttypeid_index")
+  @@index([supplierId], name: "products_supplierid_index")
+}
+
+model Shifts {
+  shiftId   Int      @id @default(autoincrement())
+  startTime DateTime @db.Time(0)
+  endTime   DateTime @db.Time(0)
+  shiftType String
+
+  employees Employees[]
+}
+
+model PurchaseStates {
+  purchaseStateId Int    @id @default(autoincrement())
+  purchaseState   String
+
+  purchases Purchases[]
+}
+
+model Positions {
+  positionId Int    @id @default(autoincrement())
+  position   String
+
+  employees Employees[]
+}
+
+model UserTypes {
+  userTypeintId Int    @id @default(autoincrement())
+  userType      String
+
+  users Users[]
+}
+
+model ExpenseByCategory {
+  expenseByCategoryId String   @id
+  expenseSummaryId    String
+  date                DateTime
+  category            BigInt
+  amount              BigInt
+
+  expenseSummary ExpenseSummary @relation(fields: [expenseSummaryId], references: [expenseSummaryId])
+
+  @@index([expenseSummaryId], name: "expensebycategory_expensesummaryid_index")
+}
+
+model Expenses {
+  expenseId String   @id
+  category  String
+  amount    Decimal  @db.Decimal(10, 2)
+  timestamp DateTime
+}
+
+model SalesSummary {
+  salesSummaryId   String   @id
+  totalValue       Decimal  @db.Decimal(10, 2)
+  changePercentage Decimal  @db.Decimal(5, 2)
+  date             DateTime
+}
+
+model PurchaseSummary {
+  purchaseSummaryId String   @id
+  totalPurchased    Decimal  @db.Decimal(10, 2)
+  changePercentage  Decimal  @db.Decimal(5, 2)
+  date              DateTime
+}
+
+model ExpenseSummary {
+  expenseSummaryId String   @id
+  totalExpenses    Decimal  @db.Decimal(10, 2)
+  date             DateTime
+
+  expenseByCategory ExpenseByCategory[]
+}
