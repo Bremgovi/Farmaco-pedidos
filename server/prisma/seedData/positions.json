@@ -1,0 +1,14 @@
+[
+    {
+        "positionId": 1,
+        "position": "Jefe"
+    },
+    {
+        "positionId": 2,
+        "position": "Tecnico"
+    },
+    {
+        "positionId": 3,
+        "position": "Quimico"
+    }
+]

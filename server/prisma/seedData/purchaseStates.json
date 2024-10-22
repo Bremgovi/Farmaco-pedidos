@@ -1,0 +1,15 @@
+[
+    {
+      "purchaseStateId": 1,
+      "purchaseState": "Pendiente"
+    },
+    {
+      "purchaseStateId": 2,
+      "purchaseState": "Completa"
+    },
+    {
+      "purchaseStateId": 3,
+      "purchaseState": "Cancelada"
+    }
+  ]
+  

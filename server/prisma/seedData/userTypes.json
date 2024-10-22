@@ -1,0 +1,10 @@
+[
+    {
+        "userTypeId": 1,
+        "userType": "Admin"
+    },
+    {
+        "userTypeId": 2,
+        "userType": "User"
+    }
+]

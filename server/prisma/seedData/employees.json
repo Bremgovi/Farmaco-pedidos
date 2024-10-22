@@ -1,0 +1,113 @@
+[
+    {
+      "employeeId": 1,
+      "userId": "f3e69b8a-b35e-47c0-8cb2-3e5a276ab8bb",
+      "positionId": 1,
+      "shiftId": 1,
+      "name": "Juan",
+      "paternalSurname": "Pérez",
+      "maternalSurname": "Gómez",
+      "email": "juan.perez@example.com",
+      "phone": "555-1234"
+    },
+    {
+      "employeeId": 2,
+      "userId": "c56ef1ef-e7c0-47c6-a8e1-16ccaa8349c1",
+      "positionId": 2,
+      "shiftId": 2,
+      "name": "María",
+      "paternalSurname": "López",
+      "maternalSurname": "Hernández",
+      "email": "maria.lopez@example.com",
+      "phone": "555-5678"
+    },
+    {
+      "employeeId": 3,
+      "userId": "4d3a9466-ef68-46d8-b80c-8b26780f8b37",
+      "positionId": 1,
+      "shiftId": 1,
+      "name": "Carlos",
+      "paternalSurname": "García",
+      "maternalSurname": "Mendoza",
+      "email": "carlos.garcia@example.com",
+      "phone": "555-8765"
+    },
+    {
+      "employeeId": 4,
+      "userId": "d2c6492f-9f6a-45c6-bcb2-9e5b5f905f57",
+      "positionId": 3,
+      "shiftId": 2,
+      "name": "Ana",
+      "paternalSurname": "Martínez",
+      "maternalSurname": "Ríos",
+      "email": "ana.martinez@example.com",
+      "phone": "555-4321"
+    },
+    {
+      "employeeId": 5,
+      "userId": "a67f1ef5-c177-4f07-bc76-24b1f4f76c63",
+      "positionId": 2,
+      "shiftId": 1,
+      "name": "Luis",
+      "paternalSurname": "Ramírez",
+      "maternalSurname": "Salinas",
+      "email": "luis.ramirez@example.com",
+      "phone": "555-3456"
+    },
+    {
+      "employeeId": 6,
+      "userId": "c9d2e798-ec41-4042-babc-9258a651915c",
+      "positionId": 3,
+      "shiftId": 2,
+      "name": "Elena",
+      "paternalSurname": "Sánchez",
+      "maternalSurname": "Torres",
+      "email": "elena.sanchez@example.com",
+      "phone": "555-6543"
+    },
+    {
+      "employeeId": 7,
+      "userId": "68b72e4a-e80c-4da2-a77b-cc8aa1b61e0c",
+      "positionId": 1,
+      "shiftId": 1,
+      "name": "Fernando",
+      "paternalSurname": "Fernández",
+      "maternalSurname": "Pérez",
+      "email": "fernando.fernandez@example.com",
+      "phone": "555-9876"
+    },
+    {
+      "employeeId": 8,
+      "userId": "b2999c5a-5407-40c6-81c5-2cb7f7bb5c5e",
+      "positionId": 2,
+      "shiftId": 2,
+      "name": "Sofía",
+      "paternalSurname": "Jiménez",
+      "maternalSurname": "Cruz",
+      "email": "sofia.jimenez@example.com",
+      "phone": "555-1598"
+    },
+    {
+      "employeeId": 9,
+      "userId": "51b8cfe5-e83d-4904-8d06-7204e7996438",
+      "positionId": 1,
+      "shiftId": 1,
+      "name": "Diego",
+      "paternalSurname": "Morales",
+      "maternalSurname": "Vázquez",
+      "email": "diego.morales@example.com",
+      "phone": "555-7531"
+    },
+    {
+      "employeeId": 10,
+      "userId": "e6f2d0c6-86b2-4b35-b12f-4e5f8a73c2da",
+      "positionId": 3,
+      "shiftId": 2,
+      "name": "Valeria",
+      "paternalSurname": "Castillo",
+      "maternalSurname": "Maldonado",
+      "email": "valeria.castillo@example.com",
+      "phone": "555-2468"
+    }
+  ]
+  

@@ -1,0 +1,13 @@
+[
+    {
+      "purchasePredictionsId": 1,
+      "predictionDate": "2024-10-22T10:30:00Z",
+      "created_at": "2024-10-15T10:30:00Z"
+    },
+    {
+      "purchasePredictionsId": 2,
+      "predictionDate": "2024-11-16T11:00:00Z",
+      "created_at": "2024-10-16T11:00:00Z"
+    }
+  ]
+  

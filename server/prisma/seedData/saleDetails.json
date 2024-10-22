@@ -1,0 +1,24 @@
+[
+  {
+    "saleDetailsId": 1,
+    "productId": "d35623ee-bef6-42b2-8776-2f99f8bb4783",
+    "saleId": "82ceec52-eeb2-4b9f-9ab6-aefa96876209",
+    "timestamp": "2024-10-01T14:15:00Z",
+    "quantity": 3,
+    "unitPrice": 50.0,
+    "totalAmount": 150.0,
+    "created_at": "2024-10-01T14:20:00Z",
+    "updated_at": "2024-10-01T14:20:00Z"
+  },
+  {
+    "saleDetailsId": 2,
+    "productId": "d35623ee-bef6-42b2-8776-2f99f8bb4784",
+    "saleId": "22408742-6ad3-4cea-b524-f57bdf69f41c",
+    "timestamp": "2024-10-03T09:30:00Z",
+    "quantity": 5,
+    "unitPrice": 20.0,
+    "totalAmount": 100.0,
+    "created_at": "2024-10-03T09:35:00Z",
+    "updated_at": "2024-10-03T09:35:00Z"
+  }
+]

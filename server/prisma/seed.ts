@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
+
 const prisma = new PrismaClient();
 
 async function deleteAllData(orderedFileNames: string[]) {
@@ -25,21 +26,59 @@ async function deleteAllData(orderedFileNames: string[]) {
 async function main() {
   const dataDirectory = path.join(__dirname, "seedData");
 
-  const orderedFileNames = [
+  // Deletion order
+  const deletionOrder = [
+    "purchaseDetails.json",
+    "saleDetails.json",
+    "predictionDetails.json",
     "products.json",
-    "expenseSummary.json",
-    "sales.json",
-    "salesSummary.json",
+    "purchasePredictions.json",
     "purchases.json",
-    "purchaseSummary.json",
+    "sales.json",
+    "purchaseStates.json",
+    "employees.json",
     "users.json",
     "expenses.json",
     "expenseByCategory.json",
+    "expenseSummary.json",
+    "salesSummary.json",
+    "purchaseSummary.json",
+    "productTypes.json",
+    "suppliers.json",
+    "shifts.json",
+    "userTypes.json",
+    "positions.json",
   ];
 
-  await deleteAllData(orderedFileNames);
+  // Creation order
+  const creationOrder = [
+    "productTypes.json",
+    "suppliers.json",
+    "userTypes.json",
+    "positions.json",
+    "shifts.json",
+    "users.json",
+    "employees.json",
+    "purchaseStates.json",
+    "sales.json",
+    "purchases.json",
+    "purchasePredictions.json",
+    "products.json",
+    "predictionDetails.json",
+    "saleDetails.json",
+    "purchaseDetails.json",
+    "expenses.json",
+    "expenseSummary.json",
+    "expenseByCategory.json",
+    "salesSummary.json",
+    "purchaseSummary.json",
+  ];
 
-  for (const fileName of orderedFileNames) {
+  // Deleting data in the specified order
+  await deleteAllData(deletionOrder);
+
+  // Seeding data in the creation order
+  for (const fileName of creationOrder) {
     const filePath = path.join(dataDirectory, fileName);
     const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     const modelName = path.basename(fileName, path.extname(fileName));

@@ -1,0 +1,35 @@
+[
+  {
+    "productId": "d35623ee-bef6-42b2-8776-2f99f8bb4783",
+    "productTypeId": 1,
+    "supplierId": 1,
+    "name": "Ibuprofeno",
+    "price": 50.00,
+    "rating": 4.5,
+    "stockQuantity": 30,
+    "minimumStock": 10,
+    "maximumStock": 100
+  },
+  {
+    "productId": "d35623ee-bef6-42b2-8776-2f99f8bb4784",
+    "productTypeId": 1,
+    "supplierId": 2,
+    "name": "Paracetamol",
+    "price": 20.00,
+    "rating": 4.7,
+    "stockQuantity": 40,
+    "minimumStock": 10,
+    "maximumStock": 100
+  },
+  {
+    "productId": "d35623ee-bef6-42b2-8776-2f99f8bb4785",
+    "productTypeId": 1,
+    "supplierId": 1,
+    "name": "Amoxicilina",
+    "price": 80.00,
+    "rating": 4.6,
+    "stockQuantity": 15,
+    "minimumStock": 5,
+    "maximumStock": 50
+  }
+]

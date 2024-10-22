@@ -1,0 +1,72 @@
+[
+  {
+    "userId": "f3e69b8a-b35e-47c0-8cb2-3e5a276ab8bb",
+    "userTypeId": 2,
+    "username": "juanperez",
+    "email": "juan.perez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "c56ef1ef-e7c0-47c6-a8e1-16ccaa8349c1",
+    "userTypeId": 2,
+    "username": "marialopez",
+    "email": "maria.lopez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "4d3a9466-ef68-46d8-b80c-8b26780f8b37",
+    "userTypeId": 1,
+    "username": "carlosgarcia",
+    "email": "carlos.garcia@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "d2c6492f-9f6a-45c6-bcb2-9e5b5f905f57",
+    "userTypeId": 2,
+    "username": "anamartinez",
+    "email": "ana.martinez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "a67f1ef5-c177-4f07-bc76-24b1f4f76c63",
+    "userTypeId": 2,
+    "username": "luisramirez",
+    "email": "luis.ramirez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "c9d2e798-ec41-4042-babc-9258a651915c",
+    "userTypeId": 2,
+    "username": "elenasanchez",
+    "email": "elena.sanchez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "68b72e4a-e80c-4da2-a77b-cc8aa1b61e0c",
+    "userTypeId": 2,
+    "username": "fernandofernandez",
+    "email": "fernando.fernandez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "b2999c5a-5407-40c6-81c5-2cb7f7bb5c5e",
+    "userTypeId": 2,
+    "username": "sofiajimenez",
+    "email": "sofia.jimenez@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "51b8cfe5-e83d-4904-8d06-7204e7996438",
+    "userTypeId": 2,
+    "username": "diegomorales",
+    "email": "diego.morales@example.com",
+    "password": "password123"
+  },
+  {
+    "userId": "e6f2d0c6-86b2-4b35-b12f-4e5f8a73c2da",
+    "userTypeId": 2,
+    "username": "valeriacastillo",
+    "email": "valeria.castillo@example.com",
+    "password": "password123"
+  }
+]

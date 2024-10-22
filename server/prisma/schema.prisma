@@ -14,8 +14,8 @@ model PurchaseDetails {
   quantity          Int
   unitCost          Decimal   @db.Decimal(10, 2)
   totalCost         Decimal   @db.Decimal(10, 2)
-  added_at          DateTime? @db.Timestamp(0)
-  updated_at        DateTime? @db.Timestamp(0)
+  added_at          DateTime? @default(now())
+  updated_at        DateTime? @updatedAt
 
   product  Products  @relation(fields: [productId], references: [productId])
   purchase Purchases @relation(fields: [purchaseId], references: [purchaseId])
@@ -41,7 +41,7 @@ model Users {
   email      String
   password   String
 
-  userType  UserTypes   @relation(fields: [userTypeId], references: [userTypeintId])
+  userType  UserTypes   @relation(fields: [userTypeId], references: [userTypeId])
   purchases Purchases[]
   sales     Sales[]
   Employees Employees[]
@@ -50,22 +50,19 @@ model Users {
 }
 
 model Sales {
-  saleId    String @id
-  productId String
-  userId    String
+  saleId String @id
+  userId String
 
   user        Users         @relation(fields: [userId], references: [userId])
-  product     Products      @relation(fields: [productId], references: [productId])
   saleDetails SaleDetails[]
 
-  @@index([productId], name: "sales_productid_index")
   @@index([userId], name: "sales_userid_index")
 }
 
 model PurchasePredictions {
   purchasePredictionsId BigInt    @id @default(autoincrement())
   predictionDate        DateTime
-  created_at            DateTime?
+  created_at            DateTime? @default(now())
 
   predictionDetails PredictionDetails[]
 }
@@ -74,8 +71,8 @@ model Purchases {
   purchaseId      String    @id
   userId          String
   purchaseStateId Int
-  created_at      DateTime?
-  updated_at      DateTime?
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
 
   user            Users             @relation(fields: [userId], references: [userId])
   purchaseState   PurchaseStates    @relation(fields: [purchaseStateId], references: [purchaseStateId])
@@ -100,8 +97,8 @@ model SaleDetails {
   quantity      Int
   unitPrice     Decimal   @db.Decimal(10, 2)
   totalAmount   Decimal   @db.Decimal(10, 2)
-  created_at    DateTime?
-  updated_at    DateTime?
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt
 
   product Products @relation(fields: [productId], references: [productId])
   sale    Sales    @relation(fields: [saleId], references: [saleId])
@@ -156,7 +153,6 @@ model Products {
 
   supplier          Suppliers           @relation(fields: [supplierId], references: [supplierId])
   productType       ProductTypes        @relation(fields: [productTypeId], references: [productTypeId])
-  sales             Sales[]
   purchaseDetails   PurchaseDetails[]
   saleDetails       SaleDetails[]
   predictionDetails PredictionDetails[]
@@ -189,8 +185,8 @@ model Positions {
 }
 
 model UserTypes {
-  userTypeintId Int    @id @default(autoincrement())
-  userType      String
+  userTypeId Int    @id @default(autoincrement())
+  userType   String
 
   users Users[]
 }
@@ -199,7 +195,7 @@ model ExpenseByCategory {
   expenseByCategoryId String   @id
   expenseSummaryId    String
   date                DateTime
-  category            BigInt
+  category            String
   amount              BigInt
 
   expenseSummary ExpenseSummary @relation(fields: [expenseSummaryId], references: [expenseSummaryId])
@@ -217,14 +213,14 @@ model Expenses {
 model SalesSummary {
   salesSummaryId   String   @id
   totalValue       Decimal  @db.Decimal(10, 2)
-  changePercentage Decimal  @db.Decimal(5, 2)
+  changePercentage Decimal? @db.Decimal(5, 2)
   date             DateTime
 }
 
 model PurchaseSummary {
   purchaseSummaryId String   @id
   totalPurchased    Decimal  @db.Decimal(10, 2)
-  changePercentage  Decimal  @db.Decimal(5, 2)
+  changePercentage  Decimal? @db.Decimal(5, 2)
   date              DateTime
 }
 

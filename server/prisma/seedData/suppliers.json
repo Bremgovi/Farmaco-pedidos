@@ -1,0 +1,73 @@
+[
+    {
+      "supplierId": 1,
+      "name": "Farmacéutica Genérica S.A.",
+      "email": "contacto@farmagen.com",
+      "phone": "1234567890",
+      "address": "Calle Falsa 123, Ciudad"
+    },
+    {
+      "supplierId": 2,
+      "name": "Laboratorios Patente S.A.",
+      "email": "info@labpatente.com",
+      "phone": "0987654321",
+      "address": "Av. Salud 456, Ciudad"
+    },
+    {
+      "supplierId": 3,
+      "name": "Distribuciones Médicas S.A.",
+      "email": "ventas@distmed.com",
+      "phone": "2345678901",
+      "address": "Calle Bienestar 789, Ciudad"
+    },
+    {
+      "supplierId": 4,
+      "name": "Salud y Bienestar S.L.",
+      "email": "contacto@saludybienestar.com",
+      "phone": "3456789012",
+      "address": "Calle Sanidad 101, Ciudad"
+    },
+    {
+      "supplierId": 5,
+      "name": "Farmacia Universal S.A.",
+      "email": "info@farmaciauniversal.com",
+      "phone": "4567890123",
+      "address": "Calle Medicina 202, Ciudad"
+    },
+    {
+      "supplierId": 6,
+      "name": "Medicamentos Avanzados S.A.",
+      "email": "ventas@medavanzados.com",
+      "phone": "5678901234",
+      "address": "Calle Innovación 303, Ciudad"
+    },
+    {
+      "supplierId": 7,
+      "name": "Soluciones Farmacéuticas S.A.",
+      "email": "contacto@solfarmaceuticas.com",
+      "phone": "6789012345",
+      "address": "Calle Eficiencia 404, Ciudad"
+    },
+    {
+      "supplierId": 8,
+      "name": "Distribuciones Generales S.A.",
+      "email": "info@distgenerales.com",
+      "phone": "7890123456",
+      "address": "Calle Progreso 505, Ciudad"
+    },
+    {
+      "supplierId": 9,
+      "name": "Farmacia Moderna S.L.",
+      "email": "ventas@farmaciamoderna.com",
+      "phone": "8901234567",
+      "address": "Calle Futuro 606, Ciudad"
+    },
+    {
+      "supplierId": 10,
+      "name": "Salud Activa S.A.",
+      "email": "contacto@saludactiva.com",
+      "phone": "9012345678",
+      "address": "Calle Vitalidad 707, Ciudad"
+    }
+  ]
+  

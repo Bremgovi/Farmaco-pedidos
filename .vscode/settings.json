@@ -1,2 +1,5 @@
 {
+    "workbench.colorTheme": "Dracula Theme",
+    "typescript.suggest.completeFunctionCalls": true,
+    "javascript.suggest.completeFunctionCalls": true
 }
