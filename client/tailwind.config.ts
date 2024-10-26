@@ -70,5 +70,8 @@
       },
     },
     plugins: [createThemes(themes)],
+    variants: {
+      width: ["responsive", "hover", "focus"]
+    }
   };
   export default config;

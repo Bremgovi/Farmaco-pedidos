@@ -31,5 +31,170 @@
     "stockQuantity": 15,
     "minimumStock": 5,
     "maximumStock": 50
+  },
+  {
+    "productId": "a12f1234-1e2f-40b2-b3c8-7de7b7f1b6c1",
+    "productTypeId": 2,
+    "supplierId": 3,
+    "name": "Metformina",
+    "price": 30.00,
+    "rating": 4.2,
+    "stockQuantity": 60,
+    "minimumStock": 15,
+    "maximumStock": 120
+  },
+  {
+    "productId": "a23f2345-1f3d-50b2-c4c8-8ae9c9f2c6d2",
+    "productTypeId": 1,
+    "supplierId": 4,
+    "name": "Atorvastatina",
+    "price": 45.00,
+    "rating": 4.3,
+    "stockQuantity": 25,
+    "minimumStock": 10,
+    "maximumStock": 80
+  },
+  {
+    "productId": "b34f3456-2f4e-60c2-d5d8-9bfadb03d7e3",
+    "productTypeId": 1,
+    "supplierId": 5,
+    "name": "Omeprazol",
+    "price": 35.00,
+    "rating": 4.4,
+    "stockQuantity": 70,
+    "minimumStock": 20,
+    "maximumStock": 150
+  },
+  {
+    "productId": "c45f4567-3f5f-70d2-e6e8-acdabc14e8f4",
+    "productTypeId": 1,
+    "supplierId": 6,
+    "name": "Aspirina",
+    "price": 15.00,
+    "rating": 4.6,
+    "stockQuantity": 90,
+    "minimumStock": 30,
+    "maximumStock": 200
+  },
+  {
+    "productId": "d56f5678-4f6g-80e2-f7f8-bedefd25f9g5",
+    "productTypeId": 2,
+    "supplierId": 2,
+    "name": "Loratadina",
+    "price": 25.00,
+    "rating": 4.1,
+    "stockQuantity": 55,
+    "minimumStock": 15,
+    "maximumStock": 100
+  },
+  {
+    "productId": "e67f6789-5f7h-90f2-g8g8-cf0f0e36g0h6",
+    "productTypeId": 1,
+    "supplierId": 7,
+    "name": "Cetirizina",
+    "price": 28.00,
+    "rating": 4.3,
+    "stockQuantity": 30,
+    "minimumStock": 10,
+    "maximumStock": 80
+  },
+  {
+    "productId": "f78f7890-6g8i-01g2-h9h9-d1f1f137h1i7",
+    "productTypeId": 1,
+    "supplierId": 8,
+    "name": "Ranitidina",
+    "price": 40.00,
+    "rating": 4.4,
+    "stockQuantity": 40,
+    "minimumStock": 10,
+    "maximumStock": 100
+  },
+  {
+    "productId": "g89f8901-7h9j-12h2-i1i1-e2g2g248i2j8",
+    "productTypeId": 1,
+    "supplierId": 9,
+    "name": "Simvastatina",
+    "price": 60.00,
+    "rating": 4.2,
+    "stockQuantity": 65,
+    "minimumStock": 20,
+    "maximumStock": 150
+  },
+  {
+    "productId": "h90f9012-8i0k-23i2-j2j2-f3h3h359j3k9",
+    "productTypeId": 1,
+    "supplierId": 10,
+    "name": "Furosemida",
+    "price": 50.00,
+    "rating": 4.5,
+    "stockQuantity": 45,
+    "minimumStock": 15,
+    "maximumStock": 90
+  },
+  {
+    "productId": "i01f0123-9j1l-34j2-k3k3-g4i4i460k4l0",
+    "productTypeId": 2,
+    "supplierId": 1,
+    "name": "Captopril",
+    "price": 55.00,
+    "rating": 4.7,
+    "stockQuantity": 50,
+    "minimumStock": 15,
+    "maximumStock": 100
+  },
+  {
+    "productId": "j12f1234-0k2m-45k2-l4l4-h5j5j571l5m1",
+    "productTypeId": 1,
+    "supplierId": 3,
+    "name": "Losartán",
+    "price": 38.00,
+    "rating": 4.4,
+    "stockQuantity": 35,
+    "minimumStock": 10,
+    "maximumStock": 70
+  },
+  {
+    "productId": "k23f2345-1l3n-56l2-m5m5-i6k6k682m6n2",
+    "productTypeId": 2,
+    "supplierId": 4,
+    "name": "Diclofenaco",
+    "price": 22.00,
+    "rating": 4.6,
+    "stockQuantity": 80,
+    "minimumStock": 25,
+    "maximumStock": 150
+  },
+  {
+    "productId": "l34f3456-2m4o-67m2-n6n6-j7l7l793n7o3",
+    "productTypeId": 2,
+    "supplierId": 5,
+    "name": "Enalapril",
+    "price": 46.00,
+    "rating": 4.3,
+    "stockQuantity": 28,
+    "minimumStock": 10,
+    "maximumStock": 100
+  },
+  {
+    "productId": "m45f4567-3n5p-78n2-o7o7-k8m8m804o8p4",
+    "productTypeId": 1,
+    "supplierId": 6,
+    "name": "Carvedilol",
+    "price": 65.00,
+    "rating": 4.5,
+    "stockQuantity": 75,
+    "minimumStock": 20,
+    "maximumStock": 150
+  },
+  {
+    "productId": "n56f5678-4o6q-89o2-p8p8-l9n9n915p9q5",
+    "productTypeId": 1,
+    "supplierId": 7,
+    "name": "Hidroclorotiazida",
+    "price": 42.00,
+    "rating": 4.6,
+    "stockQuantity": 20,
+    "minimumStock": 8,
+    "maximumStock": 60
   }
 ]
