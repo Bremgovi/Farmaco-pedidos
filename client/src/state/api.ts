@@ -2,11 +2,39 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export interface Product {
     productId: string;
+    productTypeId: number
+    supplierId: number
     name: string;
     price: number;
     rating?: number;
     stockQuantity: number;
+    minimumStock: number;
+    maximumStock: number;
+
 }
+
+export interface ProductType {
+    productTypeId: number;
+    type: string;
+}
+
+
+export interface Supplier {
+    supplierId: number;
+    name: string;
+}
+
+export interface NewProduct {
+    productTypeId: number
+    supplierId: number
+    name: string;
+    price: number;
+    rating?: number;
+    stockQuantity: number;
+    minimumStock: number;
+    maximumStock: number;
+}
+
 export interface SalesSummary {
     salesSummaryId: string;
     totalValue: number;
@@ -45,15 +73,36 @@ export interface DashboardMetrics {
 export const api = createApi({
     baseQuery: fetchBaseQuery({baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL}),
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
             providesTags: ["DashboardMetrics"]
+        }),
+        getProducts: build.query<Product[], string | void>({
+            query: (search) => ({
+                url: "/products",
+                params: search ? {search}:{}
+            }),
+            providesTags: ["Products"]
+        }),
+        getProductTypes: build.query<ProductType[], void>({
+            query: () => "/product-types",
+            providesTags: ["ProductTypes"] 
+        }),
+        getSuppliers: build.query<Supplier[], void>({
+            query: () => "/suppliers",
+            providesTags: ["Suppliers"] 
+        }),
+        createProduct: build.mutation<Product, NewProduct>({
+            query: (newProduct) => ({
+                url: "/products",
+                method: "POST",
+                body: newProduct
+            }),
+            invalidatesTags: ["Products"]
         })
     })
 });
 
-export const {
-    useGetDashboardMetricsQuery
-} = api;
+export const { useGetDashboardMetricsQuery, useGetProductsQuery, useGetProductTypesQuery, useGetSuppliersQuery, useCreateProductMutation, } = api;

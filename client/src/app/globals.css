@@ -19,6 +19,25 @@ body,
   @apply text-gray-900;
 }
 
+.scrollbar-rounded {
+  /* Scrollbar width */
+  &::-webkit-scrollbar {
+    @apply w-3 
+  }
+  /* Scrollbar thumb */
+  &::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full;
+  }
+  /* Scrollbar track */
+  &::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-full;
+  }
+  /* Scrollbar thumb hover */
+  &::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+}
+
 @media (min-width: 768px){
   .custom-grid-rows{
     grid-template-rows: repeat(8, 20vh);
