@@ -26,7 +26,7 @@ app.use(cors());
 app.use("/dashboard", dashboardRoutes) //http://localhost:8000/dashboard
 app.use("/products", productRoutes) //http://localhost:8000/products
 app.use("/product-types", productTypeRoutes) //http://localhost:8000/product-types
-app.use("/product-types", supplierRoutes) //http://localhost:8000/suppliers
+app.use("/suppliers", supplierRoutes) //http://localhost:8000/suppliers
 
 /* SERVER */
 const port = process.env.PORT || 3001;
