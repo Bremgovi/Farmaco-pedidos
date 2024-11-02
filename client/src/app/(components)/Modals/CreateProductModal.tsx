@@ -24,7 +24,6 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
   const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
   const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
   const [formData, setFormData] = useState({
-    productId: v4(),
     productTypeId: 1,
     supplierId: 1,
     name: "",
@@ -47,8 +46,6 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
           : ["price"].includes(name)
           ? parseFloat(value)
           : value,
-      // [name]: name === "productTypeId" ? parseInt(value) : ["price", "stockQuantity", "rating"].includes(name) ? parseFloat(value) : value,
-      // [name]: name === "price" || name === "stockQuantity" || name === "rating" ? parseFloat(value) : value,
     });
   };
 
@@ -73,7 +70,7 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20">
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <Header name="Añadir medicamento" />
+        <Header name="Añadir producto" />
         <form onSubmit={handleSubmit} className="mt-5">
           {/* PRODUCT NAME */}
           <label htmlFor="productName" className={labelCssStyles}>

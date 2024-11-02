@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "@/app/(components)/Header";
 
-type DeleteConfirmationModalProps = {
+type DeleteProductModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onDelete: () => void;
 };
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onDelete }: DeleteConfirmationModalProps) => {
+const DeleteProductModal = ({ isOpen, onClose, onDelete }: DeleteProductModalProps) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20">
@@ -29,4 +29,4 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onDelete }: DeleteConfirmati
   );
 };
 
-export default DeleteConfirmationModal;
+export default DeleteProductModal;

@@ -1,12 +1,17 @@
 "use client";
 
-import { useCreateProductMutation, useGetProductsQuery } from "@/state/api";
-import { PlusCircleIcon, SearchIcon } from "lucide-react";
-import { useState } from "react";
+import { useCreateProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation } from "@/state/api";
+import { PlusCircleIcon, SearchIcon, Pencil, Trash2, CheckSquare, Square } from "lucide-react";
+import { useEffect, useState } from "react";
 import Header from "@/app/(components)/Header";
 import Rating from "@/app/(components)/Rating";
 import CreateProductModal from "../(components)/Modals/CreateProductModal";
-import Image from "next/image";
+import DeleteProductModal from "../(components)/Modals/DeleteProductModal";
+import UpdateProductModal from "../(components)/Modals/UpdateProductModal";
+import { Bounce, ToastContainer } from "react-toastify";
+import { notify } from "@/utils/toastConfig";
+import "react-toastify/dist/ReactToastify.css";
+import ImageWithFallback from "../(components)/ImageWithFallback";
 
 type ProductFormData = {
   productTypeId: number;
@@ -19,15 +24,101 @@ type ProductFormData = {
   maximumStock: number;
 };
 
+type ProductFormDataWithID = {
+  productId: string;
+  productTypeId: number;
+  supplierId: number;
+  name: string;
+  price: number;
+  rating?: number;
+  stockQuantity: number;
+  minimumStock: number;
+  maximumStock: number;
+};
+
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<ProductFormDataWithID | null>(null);
 
-  const { data: products, isLoading, isError } = useGetProductsQuery(searchTerm);
-
+  const { data: products, isLoading, isError, refetch } = useGetProductsQuery(searchTerm);
   const [createProduct] = useCreateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // You can adjust this value (e.g., 100) based on when you want it to stick
+      if (window.scrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleCreateProduct = async (productData: ProductFormData) => {
-    await createProduct(productData);
+    try {
+      await createProduct(productData);
+      notify("Producto creado correctamente", "success");
+      await refetch();
+    } catch (error) {
+      notify("Error al crear producto", "error");
+    }
+  };
+
+  const handleUpdateProduct = async (productData: ProductFormDataWithID) => {
+    if (selectedProduct) {
+      await updateProduct({ productId: selectedProduct.productId, updatedProduct: productData });
+      notify("Producto actualizado correctamente", "success");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      for (const id of selectedRowIds) {
+        await deleteProduct(id);
+      }
+      notify("Producto(s) eliminado(s) correctamente", "success");
+      setSelectedRowIds([]);
+      refetch();
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      notify("Error al eliminar productos", "error");
+    }
+  };
+
+  const handleProductClick = (productId: string) => {
+    setSelectedRowIds((prevSelected) => (prevSelected.includes(productId) ? prevSelected.filter((id) => id !== productId) : [...prevSelected, productId]));
+  };
+
+  const openDeleteModal = () => {
+    if (selectedRowIds.length === 0) {
+      notify("Por favor, seleccione al menos un producto para eliminar.", "error");
+      return;
+    }
+    setIsDeleteModalOpen(true);
+  };
+
+  const openUpdateModal = () => {
+    if (selectedRowIds.length !== 1) {
+      notify("Por favor, seleccione un producto para actualizar.", "error");
+      return;
+    }
+    const productToEdit = products?.find((product) => product.productId === selectedRowIds[0]);
+    if (productToEdit) {
+      setSelectedProduct(productToEdit);
+      setIsUpdateModalOpen(true);
+    }
   };
 
   if (isLoading) {
@@ -51,9 +142,17 @@ const Products = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Medicamentos" />
-        <button className="flex items-center bg-blue-500 hover:bg-blue-700 text-gray-200 font-bold py-2 px-4 rounded" onClick={() => setIsModalOpen(true)}>
-          <PlusCircleIcon className="w-5 h-5 mr-2 !text-gray-200" /> Añadir medicamento
-        </button>
+        <div className={`flex gap-4 ${isScrolled ? "fixed top-4 right-4 bg-white shadow-lg rounded-md p-3 z-50 pr-0 pl-5" : ""}`}>
+          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openUpdateModal}>
+            <Pencil className="text-gray-600" />
+          </button>
+          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={() => setIsCreateModalOpen(true)}>
+            <PlusCircleIcon className="text-blue-600" />
+          </button>
+          <button className="inline-flex justify-center items-center mr-5 hover:bg-red-100 rounded-full p-2" onClick={openDeleteModal}>
+            <Trash2 className="text-red-600" />
+          </button>
+        </div>
       </div>
 
       {/* BODY PRODUCTS LIST */}
@@ -62,9 +161,14 @@ const Products = () => {
           <div>Loading...</div>
         ) : (
           products?.map((product) => (
-            <div key={product.productId} className="border shadow rounded-md p-4 max-w-full w-full mx-auto">
+            <div
+              key={product.productId}
+              className={`border shadow rounded-md p-4 max-w-full w-full mx-auto cursor-pointer ${selectedRowIds.includes(product.productId) ? "bg-blue-100" : ""}`}
+              onClick={() => handleProductClick(product.productId)}
+            >
               <div className="flex flex-col items-center">
-                <Image src={`/paracetamol.png`} alt={product.name} width={150} height={150} className="mb-3 rounded-2xl w-36 h-36" />
+                <div className="self-end">{selectedRowIds.includes(product.productId) ? <CheckSquare className="text-blue-600" /> : <Square className="text-gray-600" />}</div>
+                <ImageWithFallback src={`/${product.name.toLowerCase()}.png`} alt={product.name} fallback="/pill.png" width={200} height={200} className="rounded-lg" />
                 <h3 className="text-lg text-gray-900 font-semibold">{product.name}</h3>
                 <p className="text-gray-800">${Number(product.price).toFixed(2)}</p>
                 <div className="text-sm text-gray-600 mt-1">Stock: {product.stockQuantity}</div>
@@ -79,8 +183,23 @@ const Products = () => {
         )}
       </div>
 
-      {/* MODAL */}
-      <CreateProductModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onCreate={handleCreateProduct} />
+      {/* MODALS */}
+      <CreateProductModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} onCreate={handleCreateProduct} />
+      <DeleteProductModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
+      <UpdateProductModal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onUpdate={handleUpdateProduct} product={selectedProduct} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

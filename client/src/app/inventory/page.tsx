@@ -1,17 +1,30 @@
 "use client";
 
-import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation } from "@/state/api";
+import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation, useUpdateProductMutation } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import { Pencil, PlusCircleIcon, Trash2 } from "lucide-react";
-import DeleteConfirmationModal from "../(components)/Modals/DeleteProductModal";
+import DeleteProductModal from "../(components)/Modals/DeleteProductModal";
 import CreateProductModal from "../(components)/Modals/CreateProductModal";
+import UpdateProductModal from "../(components)/Modals/UpdateProductModal"; // Import UpdateProductModal
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 
 type ProductFormData = {
+  productTypeId: number;
+  supplierId: number;
+  name: string;
+  price: number;
+  rating?: number;
+  stockQuantity: number;
+  minimumStock: number;
+  maximumStock: number;
+};
+
+type ProductFormDataWithID = {
+  productId: string;
   productTypeId: number;
   supplierId: number;
   name: string;
@@ -68,20 +81,28 @@ const columns: GridColDef[] = [
 
 const Inventory = () => {
   const { data: products, isError, isLoading, refetch } = useGetProductsQuery();
+
   const [deleteProduct] = useDeleteProductMutation();
-  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
+  const [createProduct] = useCreateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
-  const [createProduct] = useCreateProductMutation();
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<ProductFormDataWithID | null>(null);
+
   const handleCreateProduct = async (productData: ProductFormData) => {
     await createProduct(productData);
-    notify("Medicamento creado correctamente", "success");
+    notify("Producto creado correctamente", "success");
   };
 
-  const handleRowSelection = (selectionModel: any) => {
-    const selectedData = products?.filter((product) => selectionModel.includes(product.productId));
-    setSelectedRowIds(selectedData?.map((product) => product.productId) || []);
+  const handleUpdateProduct = async (productData: ProductFormDataWithID) => {
+    if (selectedProduct) {
+      await updateProduct({ productId: selectedProduct.productId, updatedProduct: productData });
+      notify("Producto actualizado correctamente", "success");
+    }
   };
 
   const handleDelete = async () => {
@@ -91,7 +112,12 @@ const Inventory = () => {
     setSelectedRowIds([]);
     refetch();
     setIsDeleteModalOpen(false);
-    notify("Medicamentos eliminados correctamente", "success");
+    notify("Producto eliminado correctamente", "success");
+  };
+
+  const handleRowSelection = (selectionModel: any) => {
+    const selectedData = products?.filter((product) => selectionModel.includes(product.productId));
+    setSelectedRowIds(selectedData?.map((product) => product.productId) || []);
   };
 
   const openDeleteModal = () => {
@@ -100,6 +126,18 @@ const Inventory = () => {
       return;
     }
     setIsDeleteModalOpen(true);
+  };
+
+  const openUpdateModal = () => {
+    if (selectedRowIds.length !== 1) {
+      notify("Por favor, seleccione un producto para actualizar.", "error");
+      return;
+    }
+    const productToEdit = products?.find((product) => product.productId === selectedRowIds[0]);
+    if (productToEdit) {
+      setSelectedProduct(productToEdit);
+      setIsUpdateModalOpen(true);
+    }
   };
 
   if (isLoading) {
@@ -111,9 +149,9 @@ const Inventory = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
-        <Header name="Inventory" />
+        <Header name="Inventario" />
         <div className="flex gap-4">
-          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={() => {}}>
+          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openUpdateModal}>
             <Pencil className="text-gray-600" />
           </button>
           <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={() => setIsCreateModalOpen(true)}>
@@ -134,8 +172,9 @@ const Inventory = () => {
       />
 
       {/* MODAL */}
-      <DeleteConfirmationModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
+      <DeleteProductModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
       <CreateProductModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} onCreate={handleCreateProduct} />
+      <UpdateProductModal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onUpdate={handleUpdateProduct} product={selectedProduct} />
       <ToastContainer
         position="top-right"
         autoClose={5000}

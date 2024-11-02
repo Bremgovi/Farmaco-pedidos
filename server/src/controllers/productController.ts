@@ -8,7 +8,8 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         const products = await prisma.products.findMany({
             where: {
                 name:{
-                    contains: search
+                    contains: search,
+                    mode: "insensitive"
                 }
             }
         })
@@ -51,5 +52,30 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
         res.status(200).json({ message: "Product deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error deleting product" });
+    }
+};
+
+export const updateProduct = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { productTypeId, supplierId, name, price, rating, stockQuantity, minimumStock, maximumStock } = req.body;
+        const product = await prisma.products.update({
+            where: {
+                productId: id
+            },
+            data: {
+                productTypeId,
+                supplierId,
+                name,
+                price,
+                rating,
+                stockQuantity,
+                minimumStock,
+                maximumStock
+            }
+        });
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating product" + error});
     }
 };

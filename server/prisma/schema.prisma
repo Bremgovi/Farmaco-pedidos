@@ -35,7 +35,7 @@ model Suppliers {
 }
 
 model Users {
-  userId     String @id
+  userId     String @id @default(uuid())
   userTypeId Int
   username   String
   email      String
@@ -50,7 +50,7 @@ model Users {
 }
 
 model Sales {
-  saleId String @id
+  saleId String @id @default(uuid())
   userId String
 
   user        Users         @relation(fields: [userId], references: [userId])
@@ -68,7 +68,7 @@ model PurchasePredictions {
 }
 
 model Purchases {
-  purchaseId      String    @id
+  purchaseId      String    @id @default(uuid())
   userId          String
   purchaseStateId Int
   created_at      DateTime? @default(now())
@@ -141,7 +141,7 @@ model PredictionDetails {
 }
 
 model Products {
-  productId     String   @id
+  productId     String   @id @default(uuid())
   productTypeId Int
   supplierId    Int
   name          String
@@ -192,7 +192,7 @@ model UserTypes {
 }
 
 model ExpenseByCategory {
-  expenseByCategoryId String   @id
+  expenseByCategoryId String   @id @default(uuid())
   expenseSummaryId    String
   date                DateTime
   category            String
@@ -204,28 +204,28 @@ model ExpenseByCategory {
 }
 
 model Expenses {
-  expenseId String   @id
+  expenseId String   @id @default(uuid())
   category  String
   amount    Decimal  @db.Decimal(10, 2)
   timestamp DateTime
 }
 
 model SalesSummary {
-  salesSummaryId   String   @id
+  salesSummaryId   String   @id @default(uuid())
   totalValue       Decimal  @db.Decimal(10, 2)
   changePercentage Decimal? @db.Decimal(5, 2)
   date             DateTime
 }
 
 model PurchaseSummary {
-  purchaseSummaryId String   @id
+  purchaseSummaryId String   @id @default(uuid())
   totalPurchased    Decimal  @db.Decimal(10, 2)
   changePercentage  Decimal? @db.Decimal(5, 2)
   date              DateTime
 }
 
 model ExpenseSummary {
-  expenseSummaryId String   @id
+  expenseSummaryId String   @id @default(uuid())
   totalExpenses    Decimal  @db.Decimal(10, 2)
   date             DateTime
 
