@@ -13,17 +13,6 @@ export interface Product {
 
 }
 
-export interface ProductType {
-    productTypeId: number;
-    type: string;
-}
-
-
-export interface Supplier {
-    supplierId: number;
-    name: string;
-}
-
 export interface NewProduct {
     productTypeId: number
     supplierId: number
@@ -33,6 +22,16 @@ export interface NewProduct {
     stockQuantity: number;
     minimumStock: number;
     maximumStock: number;
+}
+
+export interface ProductType {
+    productTypeId: number;
+    type: string;
+}
+
+export interface Supplier {
+    supplierId: number;
+    name: string;
 }
 
 export interface SalesSummary {
@@ -50,7 +49,7 @@ export interface PurchaseSummary {
 }
 
 export interface ExpenseSummary {
-    expenseSummarId: string;
+    expenseSummaryId: string;
     totalExpenses: number;
     date: string;
 }
@@ -70,10 +69,30 @@ export interface DashboardMetrics {
     expenseByCategorySummary: ExpenseByCategorySummary[];
 }
 
+export interface User {
+    userId: string;
+    userTypeId: number;
+    username: string;
+    email: string;
+    password: string;
+}
+
+export interface NewUser {
+    userTypeId: number;
+    username: string;
+    email: string;
+    password: string;
+}
+
+export interface UserType {
+    userTypeId: number;
+    userType: string;
+}
+
 export const api = createApi({
     baseQuery: fetchBaseQuery({baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL}),
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -117,6 +136,37 @@ export const api = createApi({
             }),
             invalidatesTags: ["Products"],
         }),
+        getUsers: build.query<User[], void>({
+            query: () => "/users",
+            providesTags: ["Users"]
+        }),
+        createUser: build.mutation<User, NewUser>({
+            query: (newUser) => ({
+                url: "/users",
+                method: "POST",
+                body: newUser
+            }),
+            invalidatesTags: ["Users"]
+        }),
+        deleteUser: build.mutation<void, string>({
+            query: (userId) => ({
+                url: `/users/${userId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Users"],
+        }),
+        updateUser: build.mutation<User, { userId: string; updatedUser: Partial<NewUser> }>({
+            query: ({ userId, updatedUser }) => ({
+                url: `/users/${userId}`,
+                method: "PUT",
+                body: updatedUser,
+            }),
+            invalidatesTags: ["Users"],
+        }),
+        getUserTypes: build.query<UserType[], void>({
+            query: () => "/user-types",
+            providesTags: ["UserTypes"] 
+        }),
     })
 });
 
@@ -127,5 +177,10 @@ export const {
     useGetSuppliersQuery, 
     useCreateProductMutation, 
     useDeleteProductMutation,
-    useUpdateProductMutation // Added export
+    useUpdateProductMutation,
+    useGetUsersQuery,
+    useCreateUserMutation,
+    useDeleteUserMutation,
+    useUpdateUserMutation,
+    useGetUserTypesQuery
 } = api;

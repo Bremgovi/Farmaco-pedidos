@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { v4 } from "uuid";
 import Header from "@/app/(components)/Header";
 import { useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
 import Select from "react-select";
@@ -14,6 +13,7 @@ type ProductFormData = {
   minimumStock: number;
   maximumStock: number;
 };
+
 type CreateProductModalProps = {
   isOpen: boolean;
   onClose: () => void;

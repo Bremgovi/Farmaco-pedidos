@@ -5,9 +5,9 @@ import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import { Pencil, PlusCircleIcon, Trash2 } from "lucide-react";
-import DeleteProductModal from "../(components)/Modals/DeleteProductModal";
-import CreateProductModal from "../(components)/Modals/CreateProductModal";
-import UpdateProductModal from "../(components)/Modals/UpdateProductModal"; // Import UpdateProductModal
+import DeleteProductModal from "../(components)/Modals/Products/DeleteProductModal";
+import CreateProductModal from "../(components)/Modals/Products/CreateProductModal";
+import UpdateProductModal from "../(components)/Modals/Products/UpdateProductModal"; // Import UpdateProductModal
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";

@@ -5,9 +5,9 @@ import { PlusCircleIcon, SearchIcon, Pencil, Trash2, CheckSquare, Square } from 
 import { useEffect, useState } from "react";
 import Header from "@/app/(components)/Header";
 import Rating from "@/app/(components)/Rating";
-import CreateProductModal from "../(components)/Modals/CreateProductModal";
-import DeleteProductModal from "../(components)/Modals/DeleteProductModal";
-import UpdateProductModal from "../(components)/Modals/UpdateProductModal";
+import CreateProductModal from "../(components)/Modals/Products/CreateProductModal";
+import DeleteProductModal from "../(components)/Modals/Products/DeleteProductModal";
+import UpdateProductModal from "../(components)/Modals/Products/UpdateProductModal";
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
