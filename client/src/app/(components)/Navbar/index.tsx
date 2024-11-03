@@ -64,7 +64,7 @@ const Navbar = () => {
         </div>
         {/* SETTINGS */}
         <Link href="/settings">
-          <Settings className="cursor-pointer text-gray-500" size={24} />
+          <Settings className="cursor-pointer text-gray-500 hover:rotate-90 transition-transform duration-300" size={24} />
         </Link>
       </div>
     </div>

@@ -12,6 +12,7 @@ import productTypeRoutes from "./routes/productTypeRoutes";
 import supplierRoutes from "./routes/supplierRoutes";
 import userRoutes from "./routes/userRoutes";
 import userTypeRoutes from "./routes/userTypeRoutes";
+import expenseRoutes from "./routes/expenseRoutes";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -31,6 +32,8 @@ app.use("/product-types", productTypeRoutes) //http://localhost:8000/product-typ
 app.use("/suppliers", supplierRoutes) //http://localhost:8000/suppliers
 app.use("/users", userRoutes) //http://localhost:8000/users
 app.use("/user-types", userTypeRoutes) //http://localhost:8000/user-types
+app.use("/expenses", expenseRoutes) //http://localhost:8000/expenses
+
 
 /* SERVER */
 const port = process.env.PORT || 3001;
