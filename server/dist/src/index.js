@@ -17,6 +17,8 @@ const supplierRoutes_1 = __importDefault(require("./routes/supplierRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const userTypeRoutes_1 = __importDefault(require("./routes/userTypeRoutes"));
 const expenseRoutes_1 = __importDefault(require("./routes/expenseRoutes"));
+const loginRoutes_1 = __importDefault(require("./routes/loginRoutes"));
+const authMiddleware_1 = __importDefault(require("./authMiddleware"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -28,13 +30,14 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)());
 /* ROUTES */
-app.use("/dashboard", dashboardRoutes_1.default); //http://localhost:8000/dashboard
-app.use("/products", productRoutes_1.default); //http://localhost:8000/products
-app.use("/product-types", productTypeRoutes_1.default); //http://localhost:8000/product-types
-app.use("/suppliers", supplierRoutes_1.default); //http://localhost:8000/suppliers
-app.use("/users", userRoutes_1.default); //http://localhost:8000/users
-app.use("/user-types", userTypeRoutes_1.default); //http://localhost:8000/user-types
-app.use("/expenses", expenseRoutes_1.default); //http://localhost:8000/expenses
+app.use("/dashboard", authMiddleware_1.default, dashboardRoutes_1.default); //http://localhost:8000/dashboard
+app.use("/products", authMiddleware_1.default, productRoutes_1.default); //http://localhost:8000/products
+app.use("/product-types", authMiddleware_1.default, productTypeRoutes_1.default); //http://localhost:8000/product-types
+app.use("/suppliers", authMiddleware_1.default, supplierRoutes_1.default); //http://localhost:8000/suppliers
+app.use("/users", authMiddleware_1.default, userRoutes_1.default); //http://localhost:8000/users
+app.use("/user-types", authMiddleware_1.default, userTypeRoutes_1.default); //http://localhost:8000/user-types
+app.use("/expenses", authMiddleware_1.default, expenseRoutes_1.default); //http://localhost:8000/expenses
+app.use("/login", loginRoutes_1.default); //http://localhost:8000/login
 /* SERVER */
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

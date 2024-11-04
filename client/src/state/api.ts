@@ -1,3 +1,4 @@
+import { RootState } from "@/app/redux";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export interface Product {
@@ -88,11 +89,22 @@ export interface UserType {
     userTypeId: number;
     userType: string;
 }
+const baseQueryWithAuth = fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).global.userToken; 
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+});
+
 
 export const api = createApi({
-    baseQuery: fetchBaseQuery({baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL}),
+    baseQuery: baseQueryWithAuth,
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -171,6 +183,18 @@ export const api = createApi({
             query: () => "/expenses",
             providesTags: ["Expenses"]
         }),
+        login: build.mutation<{ token: string }, { username: string; password: string }>({
+            query: (credentials) => ({
+            url: "/login",
+            method: "POST",
+            body: credentials,
+            }),
+            invalidatesTags: ["Login"]
+        }),
+        getLoginInfo: build.query<User, void>({
+            query: () => "/login",
+            providesTags: ["Login"]
+        }),
     })
 });
 
@@ -188,4 +212,6 @@ export const {
     useUpdateUserMutation,
     useGetUserTypesQuery,
     useGetExpensesByCategoryQuery,
+    useLoginMutation,
+    useGetLoginInfoQuery
 } = api;

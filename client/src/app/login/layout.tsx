@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
 import LoginWrapper from "./LoginWrapper";
+import StoreProvider from "../redux";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -27,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LoginWrapper>{children}</LoginWrapper>
+        <StoreProvider>
+          <LoginWrapper>{children}</LoginWrapper>
+        </StoreProvider>
       </body>
     </html>
   );

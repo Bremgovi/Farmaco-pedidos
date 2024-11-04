@@ -2,6 +2,13 @@
 
 import React, { useState } from "react";
 import Header from "@/app/(components)/Header";
+import { logoutUser, setIsDarkMode } from "@/state";
+import { notify } from "@/utils/toastConfig";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { useRouter } from "next/navigation";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useGetLoginInfoQuery } from "@/state/api";
 
 type UserSetting = {
   label: string;
@@ -19,11 +26,44 @@ const mockSettings: UserSetting[] = [
 
 const Settings = () => {
   const [userSettings, setUserSettings] = useState<UserSetting[]>(mockSettings);
+  const dispatch = useAppDispatch();
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const toggleDarkMode = () => {
+    dispatch(setIsDarkMode(!isDarkMode));
+  };
+  const { data: userData } = useGetLoginInfoQuery();
+  React.useEffect(() => {
+    if (userData) {
+      const updatedSettings = userSettings.map((setting) => {
+        if (setting.label === "Username") {
+          return { ...setting, value: userData.username };
+        } else if (setting.label === "Email") {
+          return { ...setting, value: userData.email };
+        } else {
+          return setting;
+        }
+      });
+      setUserSettings(updatedSettings);
+    }
+  }, [userData]);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    localStorage.removeItem("userToken");
+    notify("Logged out", "success");
+    setTimeout(() => {
+      router.push("/login");
+    }, 3000);
+  };
 
   const handleToggleChange = (index: number) => {
     const settingsCopy = [...userSettings];
     settingsCopy[index].value = !settingsCopy[index].value as boolean;
     setUserSettings(settingsCopy);
+    if (settingsCopy[index].label === "Dark Mode") {
+      toggleDarkMode();
+    }
   };
 
   return (
@@ -63,6 +103,7 @@ const Settings = () => {
                         settingsCopy[index].value = e.target.value;
                         setUserSettings(settingsCopy);
                       }}
+                      disabled
                     />
                   )}
                 </td>
@@ -71,6 +112,22 @@ const Settings = () => {
           </tbody>
         </table>
       </div>
+      <button onClick={handleLogout} className="mt-5 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+        Logout
+      </button>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

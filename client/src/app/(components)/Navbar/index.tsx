@@ -1,6 +1,7 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
+import { useGetExpensesByCategoryQuery, useGetLoginInfoQuery } from "@/state/api";
 import { Bell, Menu, Moon, Settings, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,8 @@ const Navbar = () => {
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const dispatch = useAppDispatch();
+
+  const { data: userData } = useGetLoginInfoQuery();
 
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
@@ -45,7 +48,11 @@ const Navbar = () => {
           {/* TOGGLE MODE */}
           <div>
             <button onClick={toggleDarkMode}>
-              {isDarkMode ? <Sun className="cursor-pointer text-gray-500" size={24} /> : <Moon className="cursor-pointer text-gray-500" size={24} />}
+              {isDarkMode ? (
+                <Sun className="cursor-pointer text-gray-500 hover:text-blue-700" size={24} />
+              ) : (
+                <Moon className="cursor-pointer text-gray-500  hover:text-blue-700" size={24} />
+              )}
             </button>
           </div>
           {/* NOTIFICATIONS */}
@@ -58,9 +65,15 @@ const Navbar = () => {
           <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
           {/* PROFILE */}
           <div className="flex items-center gap-3 cursor-pointer">
-            <Link href="/login">
-              <Image src="/profile.jpg" alt="profile picture" width={40} height={40} className="rounded-full h-full object-cover" />
-              <span className="font-semibold">Emilio</span>
+            <Link href="/settings" className="flex flex-row gap-3 justify-center items-center">
+              <Image
+                src="/profile.jpg"
+                alt="profile picture"
+                width={40}
+                height={40}
+                className="rounded-full h-full object-cover hover:shadow-xl hover:scale-110 transition-transform duration-300"
+              />
+              <span className="font-semibold">{userData?.username}</span>
             </Link>
           </div>
         </div>

@@ -11,7 +11,6 @@ const CardSalesSummary = () => {
 
   const totalValueSum = salesData.reduce((acc, curr) => acc + Number(curr.totalValue), 0) || 0;
 
-  console.log(totalValueSum);
   const averageChangePercentage =
     salesData.reduce((acc, curr, _, array) => {
       return acc + curr.changePercentage! / array.length;
