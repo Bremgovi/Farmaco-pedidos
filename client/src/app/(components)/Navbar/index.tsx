@@ -58,8 +58,10 @@ const Navbar = () => {
           <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
           {/* PROFILE */}
           <div className="flex items-center gap-3 cursor-pointer">
-            <Image src="/profile.jpg" alt="profile picture" width={40} height={40} className="rounded-full h-full object-cover" />
-            <span className="font-semibold">Emilio</span>
+            <Link href="/login">
+              <Image src="/profile.jpg" alt="profile picture" width={40} height={40} className="rounded-full h-full object-cover" />
+              <span className="font-semibold">Emilio</span>
+            </Link>
           </div>
         </div>
         {/* SETTINGS */}
