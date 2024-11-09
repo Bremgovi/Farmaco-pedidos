@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUsersQuery, useDeleteUserMutation, useCreateUserMutation, useUpdateUserMutation } from "@/state/api";
+import { useGetUsersQuery, useDeleteUserMutation, useCreateUserMutation, useUpdateUserMutation, useGetUserTypesQuery } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
@@ -30,23 +30,12 @@ type UserFormDataWithId = {
   password: string;
 };
 
-const columns: GridColDef[] = [
-  { field: "userId", headerName: "ID", width: 90 },
-  { field: "username", headerName: "Usuario", width: 200 },
-  { field: "email", headerName: "Correo Electrónico", width: 200 },
-  { field: "password", headerName: "Contraseña", width: 200 },
-  {
-    field: "userTypeId",
-    headerName: "Tipo de usuario",
-    width: 150,
-    type: "number",
-  },
-];
-
 const Users = () => {
   const router = useRouter();
   const { data: users, isError, isLoading, refetch } = useGetUsersQuery();
+  const { data: userTypes } = useGetUserTypesQuery();
   const userToken = useAppSelector((state) => state.global.userToken);
+
   console.log(userToken);
   if (userToken == null) {
     router.push("/login");
@@ -62,6 +51,22 @@ const Users = () => {
 
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserFormDataWithId | null>(null);
+
+  const columns: GridColDef[] = [
+    { field: "userId", headerName: "ID", width: 90 },
+    { field: "username", headerName: "Usuario", width: 200 },
+    { field: "email", headerName: "Correo Electrónico", width: 200 },
+    { field: "password", headerName: "Contraseña", width: 200 },
+    {
+      field: "userTypeId",
+      headerName: "Tipo de usuario",
+      width: 150,
+      valueGetter: (value, row) => {
+        const userType = userTypes?.find((type) => type.userTypeId === row.userTypeId);
+        return userType ? userType.userType : "Desconocido";
+      },
+    },
+  ];
 
   const handlecreateUser = async (userData: UserFormData) => {
     await createUser(userData);
