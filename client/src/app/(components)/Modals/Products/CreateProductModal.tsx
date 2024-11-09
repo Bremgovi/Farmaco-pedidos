@@ -74,13 +74,13 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
         <form onSubmit={handleSubmit} className="mt-5">
           {/* PRODUCT NAME */}
           <label htmlFor="productName" className={labelCssStyles}>
-            Medicamento
+            Producto
           </label>
           <input type="text" name="name" placeholder="Nombre" onChange={handleChange} value={formData.name} className={inputCssStyles} required />
 
           {/* PRODUCT TYPE */}
           <label htmlFor="productType" className={labelCssStyles}>
-            Tipo de medicamento
+            Tipo de producto
           </label>
           {productTypesLoading ? (
             <p>Loading...</p>

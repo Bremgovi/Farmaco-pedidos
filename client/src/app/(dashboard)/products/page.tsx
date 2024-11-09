@@ -12,6 +12,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
+import { withAuth } from "../withAuth";
 
 type ProductFormData = {
   productTypeId: number;
@@ -135,13 +136,13 @@ const Products = () => {
       <div className="mb-6">
         <div className="flex items-center border-2 border-gray-200 rounded">
           <SearchIcon className="w-5 h-5 text-gray-500 m-2" />
-          <input className="w-full py-2 px-4 rounded bg-white" placeholder="Buscar medicamentos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <input className="w-full py-2 px-4 rounded bg-white" placeholder="Buscar productos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
       </div>
 
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
-        <Header name="Medicamentos" />
+        <Header name="Productos" />
         <div className={`flex gap-4 ${isScrolled ? "fixed top-4 right-4 bg-white shadow-lg rounded-md p-3 z-50 pr-0 pl-5" : ""}`}>
           <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openUpdateModal}>
             <Pencil className="text-gray-600" />
@@ -204,4 +205,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default withAuth(Products);

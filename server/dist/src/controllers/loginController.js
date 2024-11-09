@@ -35,10 +35,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const payload = {
             user: {
                 id: user.userId,
-                username: user.username
+                username: user.username,
+                userTypeId: user.userTypeId
             },
         };
-        jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
             if (err)
                 throw err;
             res.json({ token });

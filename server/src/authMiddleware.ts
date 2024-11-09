@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
+const authenticateToken = (requiredType?: number) => (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -12,11 +12,15 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction): voi
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
     if (err) {
-      res.status(403).json({ message: "Token is invalid" });
+      res.status(403).json({ message: "Token is invalid" + err});
       return;
     }
-
-    (req as any).user = user; 
+    
+    if (requiredType !== undefined && (user as any).user.userTypeId !== requiredType) {
+      return res.status(403).json({ message: 'Access forbidden: insufficient privileges' });
+    }
+    
+    (req as any).user = user;
     next();
   });
 };

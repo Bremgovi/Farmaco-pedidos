@@ -6,12 +6,9 @@ import CardSalesSummary from "./CardSalesSummary";
 import CardExpenseSummary from "./CardExpenseSummary";
 import StatCard from "./StatCard";
 import { CheckCircle, Package, Tag, TrendingDown, TrendingUp } from "lucide-react";
-import { useSelector } from "react-redux";
+import { withAuth } from "../withAuth";
 
 const Dashboard = () => {
-  // Inside your component
-  const token = useSelector((state: { global: { userToken: string } }) => state.global.userToken);
-  console.log("Token from Redux:", token);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto gap-10 pb-4 custom-grid-rows">
       <CardPopularProducts />
@@ -79,4 +76,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

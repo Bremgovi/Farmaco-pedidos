@@ -3,6 +3,7 @@
   import colors from "tailwindcss/colors";
 
   const baseColors = [
+    "slate",
     "gray",
     "red",
     "yellow",

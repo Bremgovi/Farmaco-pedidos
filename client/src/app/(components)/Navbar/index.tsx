@@ -1,7 +1,7 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
-import { useGetExpensesByCategoryQuery, useGetLoginInfoQuery } from "@/state/api";
+import { useGetLoginInfoQuery } from "@/state/api";
 import { Bell, Menu, Moon, Settings, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +13,7 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
 
   const { data: userData } = useGetLoginInfoQuery();
-
+  console.log("User data: " + userData);
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };

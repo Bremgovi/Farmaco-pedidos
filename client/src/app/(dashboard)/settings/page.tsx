@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGetLoginInfoQuery } from "@/state/api";
+import { withAuth } from "../withAuth";
 
 type UserSetting = {
   label: string;
@@ -17,11 +18,11 @@ type UserSetting = {
 };
 
 const mockSettings: UserSetting[] = [
-  { label: "Username", value: "john_doe", type: "text" },
+  { label: "Usuario", value: "john_doe", type: "text" },
   { label: "Email", value: "john.doe@example.com", type: "text" },
-  { label: "Notification", value: true, type: "toggle" },
-  { label: "Dark Mode", value: false, type: "toggle" },
-  { label: "Language", value: "English", type: "text" },
+  { label: "Notificaciones", value: true, type: "toggle" },
+  { label: "Modo Oscuro", value: false, type: "toggle" },
+  { label: "Lenguaje", value: "English", type: "text" },
 ];
 
 const Settings = () => {
@@ -35,7 +36,7 @@ const Settings = () => {
   React.useEffect(() => {
     if (userData) {
       const updatedSettings = userSettings.map((setting) => {
-        if (setting.label === "Username") {
+        if (setting.label === "Usuario") {
           return { ...setting, value: userData.username };
         } else if (setting.label === "Email") {
           return { ...setting, value: userData.email };
@@ -68,13 +69,13 @@ const Settings = () => {
 
   return (
     <div className="w-full">
-      <Header name="User Settings" />
+      <Header name="Ajustes de usuario" />
       <div className="overflow-x-auto mt-5 shadow-md">
         <table className="min-w-full bg-white rounded-lg">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Setting</th>
-              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Value</th>
+              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Ajuste</th>
+              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Valor</th>
             </tr>
           </thead>
           <tbody>
@@ -132,4 +133,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default withAuth(Settings);

@@ -11,6 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 import CreateUserModal from "../../(components)/Modals/Users/CreateUserModal";
 import DeleteUserModal from "../../(components)/Modals/Users/DeleteUserModal";
 import UpdateUserModal from "../../(components)/Modals/Users/UpdateUserModal";
+import { useAppSelector } from "@/app/redux";
+import { useRouter } from "next/navigation";
+import { withAuth } from "../withAuth";
 
 type UserFormData = {
   userTypeId: number;
@@ -29,19 +32,25 @@ type UserFormDataWithId = {
 
 const columns: GridColDef[] = [
   { field: "userId", headerName: "ID", width: 90 },
-  { field: "username", headerName: "Username", width: 200 },
-  { field: "email", headerName: "Email", width: 200 },
-  { field: "password", headerName: "Password", width: 200 },
+  { field: "username", headerName: "Usuario", width: 200 },
+  { field: "email", headerName: "Correo Electrónico", width: 200 },
+  { field: "password", headerName: "Contraseña", width: 200 },
   {
     field: "userTypeId",
-    headerName: "User Type",
+    headerName: "Tipo de usuario",
     width: 150,
     type: "number",
   },
 ];
 
 const Users = () => {
+  const router = useRouter();
   const { data: users, isError, isLoading, refetch } = useGetUsersQuery();
+  const userToken = useAppSelector((state) => state.global.userToken);
+  console.log(userToken);
+  if (userToken == null) {
+    router.push("/login");
+  }
 
   const [deleteUser] = useDeleteUserMutation();
   const [createUser] = useCreateUserMutation();
@@ -154,4 +163,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default withAuth(Users);

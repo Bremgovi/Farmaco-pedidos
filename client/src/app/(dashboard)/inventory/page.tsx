@@ -11,6 +11,7 @@ import UpdateProductModal from "../../(components)/Modals/Products/UpdateProduct
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
+import { withAuth } from "../withAuth";
 
 type ProductFormData = {
   productTypeId: number;
@@ -37,10 +38,10 @@ type ProductFormDataWithID = {
 
 const columns: GridColDef[] = [
   { field: "productId", headerName: "ID", width: 90 },
-  { field: "name", headerName: "Product Name", width: 200 },
+  { field: "name", headerName: "Nombre del Producto", width: 200 },
   {
     field: "price",
-    headerName: "Price",
+    headerName: "Precio",
     width: 110,
     type: "number",
     valueGetter: (value, row) => row.price,
@@ -48,32 +49,32 @@ const columns: GridColDef[] = [
   },
   {
     field: "rating",
-    headerName: "Rating",
+    headerName: "Calificación",
     width: 110,
     type: "number",
     valueGetter: (value, row) => (row.rating ? row.rating : "N/A"),
   },
   {
     field: "stockQuantity",
-    headerName: "Stock Quantity",
+    headerName: "Cantidad en Stock",
     width: 150,
     type: "number",
   },
   {
     field: "minimumStock",
-    headerName: "Minimum Stock",
+    headerName: "Stock Mínimo",
     width: 150,
     type: "number",
   },
   {
     field: "maximumStock",
-    headerName: "Maximum Stock",
+    headerName: "Stock Máximo",
     width: 150,
     type: "number",
   },
   {
     field: "supplierId",
-    headerName: "Supplier",
+    headerName: "Proveedor",
     width: 150,
     type: "number",
   },
@@ -192,4 +193,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default withAuth(Inventory);

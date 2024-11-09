@@ -4,6 +4,7 @@ import { ExpenseByCategorySummary, useGetExpensesByCategoryQuery } from "@/state
 import { useMemo, useState } from "react";
 import Header from "@/app/(components)/Header";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { withAuth } from "../withAuth";
 
 type AggregatedDataItem = {
   name: string;
@@ -123,4 +124,4 @@ const Expenses = () => {
   );
 };
 
-export default Expenses;
+export default withAuth(Expenses);

@@ -30,13 +30,13 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)());
 /* ROUTES */
-app.use("/dashboard", authMiddleware_1.default, dashboardRoutes_1.default); //http://localhost:8000/dashboard
-app.use("/products", authMiddleware_1.default, productRoutes_1.default); //http://localhost:8000/products
-app.use("/product-types", authMiddleware_1.default, productTypeRoutes_1.default); //http://localhost:8000/product-types
-app.use("/suppliers", authMiddleware_1.default, supplierRoutes_1.default); //http://localhost:8000/suppliers
-app.use("/users", authMiddleware_1.default, userRoutes_1.default); //http://localhost:8000/users
-app.use("/user-types", authMiddleware_1.default, userTypeRoutes_1.default); //http://localhost:8000/user-types
-app.use("/expenses", authMiddleware_1.default, expenseRoutes_1.default); //http://localhost:8000/expenses
+app.use("/dashboard", (0, authMiddleware_1.default)(), dashboardRoutes_1.default); //http://localhost:8000/dashboard
+app.use("/products", (0, authMiddleware_1.default)(), productRoutes_1.default); //http://localhost:8000/products
+app.use("/product-types", (0, authMiddleware_1.default)(), productTypeRoutes_1.default); //http://localhost:8000/product-types
+app.use("/suppliers", (0, authMiddleware_1.default)(), supplierRoutes_1.default); //http://localhost:8000/suppliers
+app.use("/users", (0, authMiddleware_1.default)(1), userRoutes_1.default); //http://localhost:8000/users
+app.use("/user-types", (0, authMiddleware_1.default)(), userTypeRoutes_1.default); //http://localhost:8000/user-types
+app.use("/expenses", (0, authMiddleware_1.default)(), expenseRoutes_1.default); //http://localhost:8000/expenses
 app.use("/login", loginRoutes_1.default); //http://localhost:8000/login
 /* SERVER */
 const port = process.env.PORT || 3001;

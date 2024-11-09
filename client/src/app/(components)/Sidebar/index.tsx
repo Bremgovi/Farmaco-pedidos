@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, SlidersHorizontal, User } from "lucide-react";
+import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, User } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import { usePathname } from "next/navigation";
@@ -55,13 +55,14 @@ function Sidebar() {
       {/* LINKS */}
       <div className="flex-grow mt-8">
         <SidebarLink href="/dashboard" icon={Layout} label="Dashboard" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/inventory" icon={Archive} label="Inventory" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/products" icon={Clipboard} label="Products" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/users" icon={User} label="Users" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/settings" icon={SlidersHorizontal} label="Settings" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/expenses" icon={CircleDollarSign} label="Expenses" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchases" icon={ShoppingCart} label="Compras" isCollapsed={isSidebarCollapsed} />
       </div>
-      {/* FOOTER */}
+      u{/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
         <p className={`text-center text-xs text-gray-500`}>&copy; 2024 FARMACO-PEDIDOS</p>
       </div>

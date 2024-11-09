@@ -29,14 +29,15 @@ export const login = async (
         const payload = {
             user: {
                 id: user.userId,
-                username: user.username 
+                username: user.username,
+                userTypeId: user.userTypeId
             },
         };
         
         jwt.sign(
             payload,
             process.env.JWT_SECRET as string,
-            { expiresIn: '1h' },
+            { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
                 res.json({ token });

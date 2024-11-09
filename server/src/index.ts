@@ -28,13 +28,13 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());    
 
 /* ROUTES */
-app.use("/dashboard", authenticateToken, dashboardRoutes) //http://localhost:8000/dashboard
-app.use("/products",  authenticateToken, productRoutes) //http://localhost:8000/products
-app.use("/product-types",  authenticateToken, productTypeRoutes) //http://localhost:8000/product-types
-app.use("/suppliers", authenticateToken, supplierRoutes) //http://localhost:8000/suppliers
-app.use("/users", authenticateToken, userRoutes) //http://localhost:8000/users
-app.use("/user-types", authenticateToken, userTypeRoutes) //http://localhost:8000/user-types
-app.use("/expenses",  authenticateToken, expenseRoutes) //http://localhost:8000/expenses
+app.use("/dashboard", authenticateToken(), dashboardRoutes) //http://localhost:8000/dashboard
+app.use("/products", authenticateToken(),productRoutes) //http://localhost:8000/products
+app.use("/product-types", authenticateToken(), productTypeRoutes) //http://localhost:8000/product-types
+app.use("/suppliers", authenticateToken(), supplierRoutes) //http://localhost:8000/suppliers
+app.use("/users",  authenticateToken(1), userRoutes) //http://localhost:8000/users
+app.use("/user-types", authenticateToken(), userTypeRoutes) //http://localhost:8000/user-types
+app.use("/expenses", authenticateToken(), expenseRoutes) //http://localhost:8000/expenses
 app.use("/login", loginRoutes) //http://localhost:8000/login
 
 /* SERVER */
