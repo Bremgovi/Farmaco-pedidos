@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/app/(components)/Header";
 import { logoutUser, setIsDarkMode } from "@/state";
 import { notify } from "@/utils/toastConfig";
@@ -33,7 +33,8 @@ const Settings = () => {
     dispatch(setIsDarkMode(!isDarkMode));
   };
   const { data: userData } = useGetLoginInfoQuery();
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (userData) {
       const updatedSettings = userSettings.map((setting) => {
         if (setting.label === "Usuario") {
@@ -47,6 +48,18 @@ const Settings = () => {
       setUserSettings(updatedSettings);
     }
   }, [userData]);
+
+  useEffect(() => {
+    const updatedSettings = userSettings.map((setting) => {
+      if (setting.label === "Modo Oscuro") {
+        return { ...setting, value: isDarkMode };
+      } else {
+        return setting;
+      }
+    });
+    setUserSettings(updatedSettings);
+  }, [isDarkMode]);
+
   const router = useRouter();
 
   const handleLogout = () => {
@@ -62,7 +75,7 @@ const Settings = () => {
     const settingsCopy = [...userSettings];
     settingsCopy[index].value = !settingsCopy[index].value as boolean;
     setUserSettings(settingsCopy);
-    if (settingsCopy[index].label === "Dark Mode") {
+    if (settingsCopy[index].label === "Modo Oscuro") {
       toggleDarkMode();
     }
   };
