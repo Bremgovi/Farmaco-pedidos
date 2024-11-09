@@ -63,6 +63,7 @@ export const getLoginInfo = async (req: Request, res: Response): Promise<void> =
         const user = await prisma.users.findUnique({
             where: { userId: userId },
             select: {
+                userId: true,
                 username: true,
                 email: true,
                 password: true

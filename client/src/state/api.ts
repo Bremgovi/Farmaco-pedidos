@@ -89,6 +89,43 @@ export interface UserType {
     userTypeId: number;
     userType: string;
 }
+
+export interface Purchase {
+    purchaseId: string;
+    userId: string;
+    purchaseStateId: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface NewPurchase {
+    userId: string;
+    purchaseStateId: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface PurchaseDetails {
+    purchaseDetailsId: number;
+    productId: string;
+    purchaseId: string;
+    quantity:number;
+    unitCost:number;
+    totalCost:number;
+    added_at: string;
+    updated_at: string;
+}
+
+export interface NewPurchaseDetails {
+    productId: string;
+    purchaseId: string;
+    quantity:number;
+    unitCost:number;
+    totalCost:number;
+    added_at?: string;
+    updated_at?: string;
+}
+
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -104,7 +141,7 @@ const baseQueryWithAuth = fetchBaseQuery({
 export const api = createApi({
     baseQuery: baseQueryWithAuth,
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -195,6 +232,44 @@ export const api = createApi({
             query: () => "/login",
             providesTags: ["Login"]
         }),
+        getPurchases: build.query<Purchase[], void>({
+            query: () => "/purchases",
+            providesTags: ["Purchases"]
+        }),
+        createPurchase: build.mutation<Purchase, NewPurchase>({
+            query: (newPurchase) => ({
+                url: "/purchases",
+                method: "POST",
+                body: newPurchase,
+            }),
+            invalidatesTags: ["Purchases"],
+        }),
+        deletePurchase: build.mutation<void, string>({
+            query: (purchaseId) => ({
+            url: `/purchases/${purchaseId}`,
+            method: "DELETE",
+            }),
+            invalidatesTags: ["Purchases"],
+        }),
+        getPurchaseDetails: build.query<PurchaseDetails[], void>({
+            query: () => "/purchase-details",
+            providesTags: ["Purchases"]
+        }),
+        createPurchaseDetails: build.mutation<PurchaseDetails, NewPurchaseDetails>({
+            query: (newPurchaseDetails) => ({
+            url: "/purchase-details",
+            method: "POST",
+            body: newPurchaseDetails,
+            }),
+            invalidatesTags: ["Purchases"],
+        }),
+        deletePurchaseDetails: build.mutation<void, number>({
+            query: (purchaseDetailsId) => ({
+            url: `/purchase-details/${purchaseDetailsId}`,
+            method: "DELETE",
+            }),
+            invalidatesTags: ["Purchases"],
+        }),
     })
 });
 
@@ -213,5 +288,11 @@ export const {
     useGetUserTypesQuery,
     useGetExpensesByCategoryQuery,
     useLoginMutation,
-    useGetLoginInfoQuery
+    useGetLoginInfoQuery,
+    useGetPurchasesQuery,
+    useCreatePurchaseMutation,
+    useDeletePurchaseMutation,
+    useGetPurchaseDetailsQuery,
+    useCreatePurchaseDetailsMutation,
+    useDeletePurchaseDetailsMutation
 } = api;

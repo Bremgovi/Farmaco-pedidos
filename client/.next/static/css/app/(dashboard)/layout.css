@@ -1010,6 +1010,22 @@ video {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--twc-white) / var(--twc-white-opacity, var(--tw-bg-opacity)));
 }
+.bg-cyan-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(207 250 254 / var(--tw-bg-opacity));
+}
+.bg-slate-100 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--twc-slate-100) / var(--twc-slate-100-opacity, var(--tw-bg-opacity)));
+}
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--twc-slate-300) / var(--twc-slate-300-opacity, var(--tw-bg-opacity)));
+}
+.bg-slate-400 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--twc-slate-400) / var(--twc-slate-400-opacity, var(--tw-bg-opacity)));
+}
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1658,6 +1674,11 @@ body,
 .hover\:bg-blue-600:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--twc-blue-600) / var(--twc-blue-600-opacity, var(--tw-bg-opacity)));
+}
+
+.hover\:bg-slate-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--twc-slate-200) / var(--twc-slate-200-opacity, var(--tw-bg-opacity)));
 }
 
 .hover\:text-blue-500:hover {

@@ -1,12 +1,12 @@
 "use client";
-
 import { useState } from "react";
 import Header from "@/app/(components)/Header";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
 import Delete from "@mui/icons-material/Delete";
-import { useGetProductsQuery } from "@/state/api";
+import { useGetProductsQuery, useUpdateProductMutation, useCreatePurchaseMutation, useCreatePurchaseDetailsMutation, useGetLoginInfoQuery } from "@/state/api";
+import { notify } from "@/utils/toastConfig";
 type ProductFormData = {
   productTypeId: number;
   supplierId: number;
@@ -25,6 +25,10 @@ const Products = () => {
   const [cart, setCart] = useState<{ product: ProductFormDataWithID; quantity: number }[]>([]);
 
   const { data: products, isLoading, isError, refetch } = useGetProductsQuery(searchTerm);
+  const { data: userData } = useGetLoginInfoQuery();
+  const [updateProduct] = useUpdateProductMutation();
+  const [createPurchase] = useCreatePurchaseMutation();
+  const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
 
   const handleAddToCart = (product: ProductFormDataWithID) => {
     setCart((prevCart) => {
@@ -48,10 +52,40 @@ const Products = () => {
     return cart.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
   };
 
-  const handlePurchase = () => {
-    // Logic to handle purchase
-    console.log("Purchase made:", cart);
-    setCart([]); // Clear the cart after purchase
+  const handlePurchase = async () => {
+    try {
+      console.log(userData);
+      if (!userData?.userId) {
+        notify("Error: Usuario no identificado", "error");
+        return;
+      }
+      const purchaseData = {
+        userId: userData.userId,
+        purchaseStateId: 1, // Replace with actual purchase state ID
+      };
+      const purchase = await createPurchase(purchaseData).unwrap();
+
+      for (const item of cart) {
+        const updatedStock = item.product.stockQuantity + item.quantity;
+        await updateProduct({
+          productId: item.product.productId,
+          updatedProduct: { stockQuantity: updatedStock },
+        });
+
+        const purchaseDetailsData = {
+          productId: item.product.productId,
+          purchaseId: purchase.purchaseId,
+          quantity: item.quantity,
+          unitCost: item.product.price,
+          totalCost: item.product.price * item.quantity,
+        };
+        await createPurchaseDetails(purchaseDetailsData);
+      }
+      notify("Compra realizada correctamente", "success");
+      setCart([]);
+    } catch (error) {
+      notify("Error al realizar la compra", "error");
+    }
   };
 
   const filteredCart = cart.filter((item) => item.product.name.toLowerCase().includes(cartSearchTerm.toLowerCase()));
@@ -60,12 +94,12 @@ const Products = () => {
   if (isError || !products) return <div>Error al cargar los productos</div>;
 
   return (
-    <div className="flex mx-auto w-full pb-5 flex-col lg:flex-row min-h-screen bg-gray-100">
+    <div className="flex mx-auto w-full pb-5 flex-col lg:flex-row min-h-screen">
       {/* Catálogo de Productos */}
       <div className="w-full p-4 lg:w-2/3">
-        <Header name="Productos" />
+        <Header name="Realizar pedido" />
         <input type="text" placeholder="Buscar productos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full p-2 mb-4 mt-5 border rounded" />
-        <div className="max-h-64 overflow-y-auto sm:max-h-none sm:overflow-visible">
+        <div className="max-h-64 overflow-y-auto sm:max-h-none sm:overflow-visible scrollbar-rounded">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {products?.map((product) => (
               <div
@@ -86,7 +120,7 @@ const Products = () => {
       </div>
 
       {/* Carrito de Compras */}
-      <div className="w-full lg:w-1/3 p-4 border-l">
+      <div className="w-full lg:w-1/3 p-4 bg-slate-200 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Carrito de Compras</h2>
         <input
           type="text"
@@ -102,7 +136,7 @@ const Products = () => {
             <div className="my-5 text-xl font-semibold">Total: ${getTotal()}</div>
             <ul className="max-h-64 lg:max-h-96 overflow-y-auto scrollbar-rounded">
               {filteredCart.map((item) => (
-                <div key={item.product.productId} className="flex gap-5 items-center bg-slate-200 p-2 rounded-md mb-2">
+                <div key={item.product.productId} className="flex gap-5 items-center bg-slate-300 p-2 rounded-md mb-2">
                   <div className="flex items-center text-3xl">
                     <Delete
                       className="text-gray-500 hover:text-red-400 cursor-pointer w-full h-full"

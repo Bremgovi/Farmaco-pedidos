@@ -15,6 +15,8 @@ import userTypeRoutes from "./routes/userTypeRoutes";
 import expenseRoutes from "./routes/expenseRoutes";
 import loginRoutes from "./routes/loginRoutes";
 import authenticateToken from "./authMiddleware";
+import purchaseRoutes from "./routes/purchaseRoutes";
+import purchaseDetailsRoutes from "./routes/purchaseDetailsRoutes";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -35,6 +37,8 @@ app.use("/suppliers", authenticateToken(), supplierRoutes) //http://localhost:80
 app.use("/users",  authenticateToken(1), userRoutes) //http://localhost:8000/users
 app.use("/user-types", authenticateToken(), userTypeRoutes) //http://localhost:8000/user-types
 app.use("/expenses", authenticateToken(), expenseRoutes) //http://localhost:8000/expenses
+app.use("/purchases", authenticateToken(), purchaseRoutes) //http://localhost:8000/purchases
+app.use("/purchase-details", authenticateToken(), purchaseDetailsRoutes) //http://localhost:8000/purchase-details
 app.use("/login", loginRoutes) //http://localhost:8000/login
 
 /* SERVER */

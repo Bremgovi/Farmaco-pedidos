@@ -64,6 +64,7 @@ const getLoginInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const user = yield prisma.users.findUnique({
             where: { userId: userId },
             select: {
+                userId: true,
                 username: true,
                 email: true,
                 password: true

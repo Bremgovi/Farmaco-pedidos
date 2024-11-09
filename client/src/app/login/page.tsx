@@ -9,23 +9,25 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUserInfo, setUserToken } from "@/state";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "../redux";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const token = useAppSelector((state) => state.global.userToken);
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
-  /*
   useEffect(() => {
-    const token = localStorage.getItem("userToken");
+    //const token = localStorage.getItem("userToken");
     if (token) {
+      console.log(token);
       router.push("/dashboard");
     }
   }, []);
-*/
+
   const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
