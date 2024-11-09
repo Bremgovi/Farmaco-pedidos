@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation } from "@/state/api";
+import { useCreateProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation, useGetSuppliersQuery, useGetProductTypesQuery } from "@/state/api";
 import { PlusCircleIcon, SearchIcon, Pencil, Trash2, CheckSquare, Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import Header from "@/app/(components)/Header";
@@ -44,6 +44,8 @@ const Products = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductFormDataWithID | null>(null);
+  const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
+  const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
 
   const { data: products, isLoading, isError, refetch } = useGetProductsQuery(searchTerm);
   const [createProduct] = useCreateProductMutation();
@@ -171,7 +173,9 @@ const Products = () => {
                 <div className="self-end">{selectedRowIds.includes(product.productId) ? <CheckSquare className="text-blue-600" /> : <Square className="text-gray-600" />}</div>
                 <ImageWithFallback src={`/${product.name.toLowerCase()}.png`} alt={product.name} fallback="/pill.png" width={200} height={200} className="rounded-lg" />
                 <h3 className="text-lg text-gray-900 font-semibold">{product.name}</h3>
-                <p className="text-gray-800">${Number(product.price).toFixed(2)}</p>
+                <p className="text-gray-600 font-semibold">{productTypes?.find((type) => type.productTypeId === product.productTypeId)?.type || "Unknown Type"}</p>
+                <p className="text-gray-600 font-semibold">{suppliers?.find((supplier) => supplier.supplierId === product.supplierId)?.name || "Unknown Supplier"}</p>
+                <p className="text-gray-800 mt-5">${Number(product.price).toFixed(2)}</p>
                 <div className="text-sm text-gray-600 mt-1">Stock: {product.stockQuantity}</div>
                 {product.rating && (
                   <div className="flex items-center mt-2">

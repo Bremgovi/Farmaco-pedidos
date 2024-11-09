@@ -5,8 +5,18 @@ import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
 import Delete from "@mui/icons-material/Delete";
-import { useGetProductsQuery, useUpdateProductMutation, useCreatePurchaseMutation, useCreatePurchaseDetailsMutation, useGetLoginInfoQuery } from "@/state/api";
+import {
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useCreatePurchaseMutation,
+  useCreatePurchaseDetailsMutation,
+  useGetLoginInfoQuery,
+  useGetProductTypesQuery,
+  useGetSuppliersQuery,
+} from "@/state/api";
 import { notify } from "@/utils/toastConfig";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
+
 type ProductFormData = {
   productTypeId: number;
   supplierId: number;
@@ -25,10 +35,15 @@ const Products = () => {
   const [cart, setCart] = useState<{ product: ProductFormDataWithID; quantity: number }[]>([]);
 
   const { data: products, isLoading, isError, refetch } = useGetProductsQuery(searchTerm);
+  const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
+  const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
+
   const { data: userData } = useGetLoginInfoQuery();
   const [updateProduct] = useUpdateProductMutation();
   const [createPurchase] = useCreatePurchaseMutation();
   const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
+
+  const sortedProducts = products?.slice().sort((a, b) => a.name.localeCompare(b.name));
 
   const handleAddToCart = (product: ProductFormDataWithID) => {
     setCart((prevCart) => {
@@ -94,14 +109,14 @@ const Products = () => {
   if (isError || !products) return <div>Error al cargar los productos</div>;
 
   return (
-    <div className="flex mx-auto w-full pb-5 flex-col lg:flex-row min-h-screen">
+    <div className="flex mx-auto w-full pb-5 flex-col lg:flex-row">
       {/* Catálogo de Productos */}
       <div className="w-full p-4 lg:w-2/3">
         <Header name="Realizar pedido" />
         <input type="text" placeholder="Buscar productos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full p-2 mb-4 mt-5 border rounded" />
         <div className="max-h-64 overflow-y-auto sm:max-h-none sm:overflow-visible scrollbar-rounded">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {products?.map((product) => (
+            {sortedProducts?.map((product) => (
               <div
                 key={product.productId}
                 className="border shadow rounded-md p-4 max-w-full w-1/2 lg:w-full mx-auto cursor-pointer hover:bg-slate-100 hover:shadow-lg"
@@ -110,7 +125,9 @@ const Products = () => {
                 <div className="flex flex-col items-center">
                   <ImageWithFallback src={`/${product.name.toLowerCase()}.png`} alt={product.name} fallback="/pill.png" width={200} height={200} className="rounded-lg" />
                   <h3 className="text-lg text-gray-900 font-semibold">{product.name}</h3>
-                  <p className="text-gray-800">${Number(product.price).toFixed(2)}</p>
+                  <p className="text-gray-600 font-semibold">{productTypes?.find((type) => type.productTypeId === product.productTypeId)?.type || "Unknown Type"}</p>
+                  <p className="text-gray-600 font-semibold">{suppliers?.find((supplier) => supplier.supplierId === product.supplierId)?.name || "Unknown Supplier"}</p>
+                  <p className="text-gray-800 mt-5">${Number(product.price).toFixed(2)}</p>
                   <div className="text-sm text-gray-600 mt-1">Stock: {product.stockQuantity}</div>
                 </div>
               </div>
@@ -121,7 +138,10 @@ const Products = () => {
 
       {/* Carrito de Compras */}
       <div className="w-full lg:w-1/3 p-4 bg-slate-200 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Carrito de Compras</h2>
+        <div className="flex gap-4 text-4xl items-center mb-4">
+          <ShoppingCart fontSize="inherit" />
+          <h2 className="text-xl font-semibold">Carrito de Compras</h2>
+        </div>
         <input
           type="text"
           placeholder="Buscar en el carrito..."

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation, useUpdateProductMutation } from "@/state/api";
+import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation, useUpdateProductMutation, useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
@@ -36,52 +36,10 @@ type ProductFormDataWithID = {
   maximumStock: number;
 };
 
-const columns: GridColDef[] = [
-  { field: "productId", headerName: "ID", width: 90 },
-  { field: "name", headerName: "Nombre del Producto", width: 200 },
-  {
-    field: "price",
-    headerName: "Precio",
-    width: 110,
-    type: "number",
-    valueGetter: (value, row) => row.price,
-    renderCell: (params) => `$${params.value}`,
-  },
-  {
-    field: "rating",
-    headerName: "Calificación",
-    width: 110,
-    type: "number",
-    valueGetter: (value, row) => (row.rating ? row.rating : "N/A"),
-  },
-  {
-    field: "stockQuantity",
-    headerName: "Cantidad en Stock",
-    width: 150,
-    type: "number",
-  },
-  {
-    field: "minimumStock",
-    headerName: "Stock Mínimo",
-    width: 150,
-    type: "number",
-  },
-  {
-    field: "maximumStock",
-    headerName: "Stock Máximo",
-    width: 150,
-    type: "number",
-  },
-  {
-    field: "supplierId",
-    headerName: "Proveedor",
-    width: 150,
-    type: "number",
-  },
-];
-
 const Inventory = () => {
   const { data: products, isError, isLoading, refetch } = useGetProductsQuery();
+  const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
+  const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
 
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
@@ -93,6 +51,63 @@ const Inventory = () => {
 
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductFormDataWithID | null>(null);
+
+  const columns: GridColDef[] = [
+    { field: "productId", headerName: "ID", width: 90 },
+    { field: "name", headerName: "Nombre del Producto", width: 200 },
+    {
+      field: "productTypeId",
+      headerName: "Tipo de Producto",
+      width: 150,
+      valueGetter: (value, row) => {
+        const productType = productTypes?.find((type) => type.productTypeId === row.productTypeId);
+        return productType ? productType.type : "Desconocido";
+      },
+    },
+    {
+      field: "price",
+      headerName: "Precio",
+      width: 110,
+      type: "number",
+      valueGetter: (value, row) => row.price,
+      renderCell: (params) => `$${params.value}`,
+    },
+    {
+      field: "rating",
+      headerName: "Calificación",
+      width: 110,
+      type: "number",
+      valueGetter: (value, row) => (row.rating ? row.rating : "N/A"),
+    },
+    {
+      field: "stockQuantity",
+      headerName: "Cantidad en Stock",
+      width: 150,
+      type: "number",
+    },
+    {
+      field: "minimumStock",
+      headerName: "Stock Mínimo",
+      width: 150,
+      type: "number",
+    },
+    {
+      field: "maximumStock",
+      headerName: "Stock Máximo",
+      width: 150,
+      type: "number",
+    },
+    {
+      field: "supplierId",
+      headerName: "Proveedor",
+      width: 200,
+      type: "number",
+      valueGetter: (value, row) => {
+        const supplier = suppliers?.find((supplier) => supplier.supplierId === row.supplierId);
+        return supplier ? supplier.name : "Desconocido";
+      },
+    },
+  ];
 
   const handleCreateProduct = async (productData: ProductFormData) => {
     await createProduct(productData);

@@ -54,13 +54,13 @@ function Sidebar() {
       </div>
       {/* LINKS */}
       <div className="flex-grow mt-8">
-        <SidebarLink href="/dashboard" icon={Layout} label="Dashboard" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchases" icon={ShoppingCart} label="Compras" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchases" icon={ShoppingCart} label="Compras" isCollapsed={isSidebarCollapsed} />
       </div>
       u{/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
