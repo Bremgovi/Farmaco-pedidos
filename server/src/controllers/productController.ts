@@ -21,23 +21,14 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
 
 export const createProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {productId, productTypeId, supplierId, name, price, rating, stockQuantity, minimumStock, maximumStock} = req.body;
-        const product = await prisma.products.create({
-            data:{
-                productId,
-                productTypeId,
-                supplierId,
-                name,
-                price,
-                rating,
-                stockQuantity,
-                minimumStock,
-                maximumStock
-            }
-        })
-        res.status(200).json(product)
+        const products = Array.isArray(req.body) ? req.body : [req.body];
+        const createdProducts = await prisma.products.createMany({
+            data: products,
+            skipDuplicates: true
+        });
+        res.status(200).json(createdProducts);
     } catch (error) {
-        res.status(500).json({message: "Error creating product" + error})
+        res.status(500).json({message: "Error creating products" + error});
     }
 }
 

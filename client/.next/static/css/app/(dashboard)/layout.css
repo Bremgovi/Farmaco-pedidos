@@ -1156,6 +1156,9 @@ video {
 .text-center {
   text-align: center;
 }
+.text-right {
+  text-align: right;
+}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1265,6 +1268,14 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: hsl(var(--twc-white) / var(--twc-white-opacity, var(--tw-text-opacity)));
+}
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: hsl(var(--twc-gray-300) / var(--twc-gray-300-opacity, var(--tw-text-opacity)));
+}
+.text-gray-100 {
+  --tw-text-opacity: 1;
+  color: hsl(var(--twc-gray-100) / var(--twc-gray-100-opacity, var(--tw-text-opacity)));
 }
 .antialiased {
   -webkit-font-smoothing: antialiased;

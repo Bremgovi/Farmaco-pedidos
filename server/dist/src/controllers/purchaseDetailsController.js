@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePurchaseDetails = exports.getPurchaseDetails = exports.createPurchaseDetails = void 0;
+exports.deletePurchaseDetails = exports.getPurchaseDetailsByPurchaseId = exports.getPurchaseDetails = exports.createPurchaseDetails = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const createPurchaseDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,6 +39,21 @@ const getPurchaseDetails = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getPurchaseDetails = getPurchaseDetails;
+const getPurchaseDetailsByPurchaseId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Hola");
+        const { purchaseId } = req.params;
+        const purchaseDetails = yield prisma.purchaseDetails.findMany({
+            where: { purchaseId: purchaseId }
+        });
+        const serializedData = purchaseDetails.map((detail) => (Object.assign(Object.assign({}, detail), { purchaseDetailsId: detail.purchaseDetailsId.toString() })));
+        res.status(200).json(serializedData);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error retrieving purchase details by purchase ID" + error });
+    }
+});
+exports.getPurchaseDetailsByPurchaseId = getPurchaseDetailsByPurchaseId;
 const deletePurchaseDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;

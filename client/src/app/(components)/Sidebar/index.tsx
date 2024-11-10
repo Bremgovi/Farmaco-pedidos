@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, User } from "lucide-react";
+import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, Truck, User } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import { usePathname } from "next/navigation";
@@ -57,7 +57,8 @@ function Sidebar() {
         <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchases" icon={ShoppingCart} label="Compras" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} />

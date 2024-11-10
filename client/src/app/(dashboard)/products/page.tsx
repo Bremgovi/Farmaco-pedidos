@@ -132,6 +132,8 @@ const Products = () => {
     return <div className="text-center text-red-500 py-4">Failed to fetch products</div>;
   }
 
+  const sortedProducts = products?.slice().sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="mx-auto pb-5 w-full">
       {/* SEARCH BAR */}
@@ -163,7 +165,7 @@ const Products = () => {
         {isLoading ? (
           <div>Loading...</div>
         ) : (
-          products?.map((product) => (
+          sortedProducts?.map((product) => (
             <div
               key={product.productId}
               className={`border shadow rounded-md p-4 max-w-full w-full mx-auto cursor-pointer ${selectedRowIds.includes(product.productId) ? "bg-blue-100" : ""}`}

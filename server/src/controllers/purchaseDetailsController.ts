@@ -34,6 +34,23 @@ export const getPurchaseDetails = async (req: Request, res: Response): Promise<v
     }
 }
 
+export const getPurchaseDetailsByPurchaseId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        console.log("Hola")
+        const { purchaseId } = req.params;
+        const purchaseDetails = await prisma.purchaseDetails.findMany({
+            where: { purchaseId: purchaseId } 
+        });
+        const serializedData = purchaseDetails.map((detail) => ({
+            ...detail,
+            purchaseDetailsId: detail.purchaseDetailsId.toString(),
+        }));
+        res.status(200).json(serializedData);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving purchase details by purchase ID" + error });
+    }
+}
+
 export const deletePurchaseDetails = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;

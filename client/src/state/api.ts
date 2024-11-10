@@ -255,6 +255,13 @@ export const api = createApi({
             query: () => "/purchase-details",
             providesTags: ["Purchases"]
         }),
+        getPurchaseDetailsByPurchaseId: build.query<PurchaseDetails[], string>({
+            query: (purchaseId) => ({
+                url: `/purchase-details/purchase/${purchaseId}`,
+                params: { purchaseId },
+            }),
+            providesTags: ["Purchases"],
+        }),
         createPurchaseDetails: build.mutation<PurchaseDetails, NewPurchaseDetails>({
             query: (newPurchaseDetails) => ({
             url: "/purchase-details",
@@ -294,5 +301,6 @@ export const {
     useDeletePurchaseMutation,
     useGetPurchaseDetailsQuery,
     useCreatePurchaseDetailsMutation,
-    useDeletePurchaseDetailsMutation
+    useDeletePurchaseDetailsMutation,
+    useGetPurchaseDetailsByPurchaseIdQuery,
 } = api;

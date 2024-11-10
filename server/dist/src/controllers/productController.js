@@ -33,24 +33,15 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getProducts = getProducts;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { productId, productTypeId, supplierId, name, price, rating, stockQuantity, minimumStock, maximumStock } = req.body;
-        const product = yield prisma.products.create({
-            data: {
-                productId,
-                productTypeId,
-                supplierId,
-                name,
-                price,
-                rating,
-                stockQuantity,
-                minimumStock,
-                maximumStock
-            }
+        const products = Array.isArray(req.body) ? req.body : [req.body];
+        const createdProducts = yield prisma.products.createMany({
+            data: products,
+            skipDuplicates: true
         });
-        res.status(200).json(product);
+        res.status(200).json(createdProducts);
     }
     catch (error) {
-        res.status(500).json({ message: "Error creating product" + error });
+        res.status(500).json({ message: "Error creating products" + error });
     }
 });
 exports.createProduct = createProduct;

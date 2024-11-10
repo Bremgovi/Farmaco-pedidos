@@ -69,7 +69,6 @@ const Products = () => {
 
   const handlePurchase = async () => {
     try {
-      console.log(userData);
       if (!userData?.userId) {
         notify("Error: Usuario no identificado", "error");
         return;

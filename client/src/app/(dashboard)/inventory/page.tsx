@@ -81,20 +81,20 @@ const Inventory = () => {
     },
     {
       field: "stockQuantity",
-      headerName: "Cantidad en Stock",
-      width: 150,
+      headerName: "Stock",
+      width: 100,
       type: "number",
     },
     {
       field: "minimumStock",
       headerName: "Stock Mínimo",
-      width: 150,
+      width: 100,
       type: "number",
     },
     {
       field: "maximumStock",
       headerName: "Stock Máximo",
-      width: 150,
+      width: 100,
       type: "number",
     },
     {
