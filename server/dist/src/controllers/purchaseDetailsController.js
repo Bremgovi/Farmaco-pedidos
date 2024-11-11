@@ -14,10 +14,10 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const createPurchaseDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { productId, purchaseId, quantity, unitCost, totalCost, added_at, updated_at } = req.body;
+        const { productId, purchaseId, quantity, unitCost, totalCost, created_at, updated_at } = req.body;
         const purchaseDetails = yield prisma.purchaseDetails.create({
             data: {
-                productId, purchaseId, quantity, unitCost, totalCost, added_at, updated_at
+                productId, purchaseId, quantity, unitCost, totalCost, created_at, updated_at
             }
         });
         const serializedData = Object.assign(Object.assign({}, purchaseDetails), { purchaseDetailsId: purchaseDetails.purchaseDetailsId.toString() });

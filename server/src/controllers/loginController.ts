@@ -64,6 +64,7 @@ export const getLoginInfo = async (req: Request, res: Response): Promise<void> =
             where: { userId: userId },
             select: {
                 userId: true,
+                userTypeId: true,
                 username: true,
                 email: true,
                 password: true

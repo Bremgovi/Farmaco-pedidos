@@ -4,6 +4,6 @@ import authenticateToken from "../authMiddleware";
 const router = Router();
 
 router.post("/", login); 
-router.get("/", authenticateToken(1), getLoginInfo); 
+router.get("/", authenticateToken(), getLoginInfo); 
  
 export default router;

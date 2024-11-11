@@ -1,0 +1,15 @@
+[
+    {
+      "transactionStatusId": 1,
+      "transactionStatus": "Pendiente"
+    },
+    {
+      "transactionStatusId": 2,
+      "transactionStatus": "Completa"
+    },
+    {
+      "transactionStatusId": 3,
+      "transactionStatus": "Cancelada"
+    }
+  ]
+  

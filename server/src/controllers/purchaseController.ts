@@ -14,10 +14,10 @@ export const getPurchases= async (req: Request, res: Response): Promise<void> =>
 
 export const createPurchase = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {purchaseId, userId, purchaseStateId, created_at, updated_at} = req.body;
+        const {purchaseId, userId, transactionStatusId, created_at, updated_at} = req.body;
         const purchase = await prisma.purchases.create({
             data:{
-                purchaseId, userId, purchaseStateId, created_at, updated_at
+                purchaseId, userId, transactionStatusId, created_at, updated_at
             }
         })
         res.status(200).json(purchase)
@@ -35,5 +35,19 @@ export const deletePurchase = async (req: Request, res: Response): Promise<void>
         res.status(200).json({ message: "Purchase deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error deleting purchase: " + error });
+    }
+}
+
+export const updatePurchase = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { purchaseId, userId, transactionStatusId, created_at, updated_at } = req.body;
+        const updatedPurchase = await prisma.purchases.update({
+            where: { purchaseId: id },
+            data: { purchaseId, userId, transactionStatusId, created_at, updated_at }
+        });
+        res.status(200).json(updatedPurchase);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating purchase: " + error });
     }
 }

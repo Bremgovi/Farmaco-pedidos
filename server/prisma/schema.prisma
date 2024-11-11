@@ -14,7 +14,7 @@ model PurchaseDetails {
   quantity          Int
   unitCost          Decimal   @db.Decimal(10, 2)
   totalCost         Decimal   @db.Decimal(10, 2)
-  added_at          DateTime? @default(now())
+  created_at        DateTime? @default(now())
   updated_at        DateTime? @updatedAt
 
   product  Products  @relation(fields: [productId], references: [productId])
@@ -50,13 +50,18 @@ model Users {
 }
 
 model Sales {
-  saleId String @id @default(uuid())
-  userId String
+  saleId              String    @id @default(uuid())
+  userId              String
+  transactionStatusId Int
+  created_at          DateTime? @default(now())
+  updated_at          DateTime? @updatedAt
 
-  user        Users         @relation(fields: [userId], references: [userId])
-  saleDetails SaleDetails[]
+  user              Users             @relation(fields: [userId], references: [userId])
+  transactionStatus TransactionStatus @relation(fields: [transactionStatusId], references: [transactionStatusId])
+  saleDetails       SaleDetails[]
 
   @@index([userId], name: "sales_userid_index")
+  @@index([transactionStatusId], name: "sales_transactionstatusid_index")
 }
 
 model PurchasePredictions {
@@ -68,18 +73,18 @@ model PurchasePredictions {
 }
 
 model Purchases {
-  purchaseId      String    @id @default(uuid())
-  userId          String
-  purchaseStateId Int
-  created_at      DateTime? @default(now())
-  updated_at      DateTime? @updatedAt
+  purchaseId          String    @id @default(uuid())
+  userId              String
+  transactionStatusId Int
+  created_at          DateTime? @default(now())
+  updated_at          DateTime? @updatedAt
 
-  user            Users             @relation(fields: [userId], references: [userId])
-  purchaseState   PurchaseStates    @relation(fields: [purchaseStateId], references: [purchaseStateId])
-  purchaseDetails PurchaseDetails[]
+  user              Users             @relation(fields: [userId], references: [userId])
+  transactionStatus TransactionStatus @relation(fields: [transactionStatusId], references: [transactionStatusId])
+  purchaseDetails   PurchaseDetails[]
 
   @@index([userId], name: "purchases_userid_index")
-  @@index([purchaseStateId], name: "purchases_purchasestateid_index")
+  @@index([transactionStatusId], name: "purchases_transactionStatusid_index")
 }
 
 model ProductTypes {
@@ -95,8 +100,8 @@ model SaleDetails {
   saleId        String
   timestamp     DateTime
   quantity      Int
-  unitPrice     Decimal   @db.Decimal(10, 2)
-  totalAmount   Decimal   @db.Decimal(10, 2)
+  unitCost      Decimal   @db.Decimal(10, 2)
+  totalCost     Decimal   @db.Decimal(10, 2)
   created_at    DateTime? @default(now())
   updated_at    DateTime? @updatedAt
 
@@ -144,7 +149,7 @@ model Products {
   productId     String   @id @default(uuid())
   productTypeId Int
   supplierId    Int
-  name          String
+  name          String   @unique
   price         Decimal  @db.Decimal(10, 2)
   rating        Decimal? @db.Decimal(2, 1)
   stockQuantity Int
@@ -168,13 +173,6 @@ model Shifts {
   shiftType String
 
   employees Employees[]
-}
-
-model PurchaseStates {
-  purchaseStateId Int    @id @default(autoincrement())
-  purchaseState   String
-
-  purchases Purchases[]
 }
 
 model Positions {
@@ -230,4 +228,21 @@ model ExpenseSummary {
   date             DateTime
 
   expenseByCategory ExpenseByCategory[]
+}
+
+model Clients {
+  clientId        String  @id @default(uuid())
+  name            String
+  paternalSurname String?
+  maternalSurname String?
+  email           String?
+  phone           String?
+}
+
+model TransactionStatus {
+  transactionStatusId Int    @id @default(autoincrement())
+  transactionStatus   String
+
+  sales     Sales[]
+  purchases Purchases[]
 }

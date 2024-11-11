@@ -8,5 +8,5 @@ const loginController_1 = require("../controllers/loginController");
 const authMiddleware_1 = __importDefault(require("../authMiddleware"));
 const router = (0, express_1.Router)();
 router.post("/", loginController_1.login);
-router.get("/", (0, authMiddleware_1.default)(1), loginController_1.getLoginInfo);
+router.get("/", (0, authMiddleware_1.default)(), loginController_1.getLoginInfo);
 exports.default = router;

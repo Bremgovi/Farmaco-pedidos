@@ -46,7 +46,8 @@ function main() {
             "purchasePredictions.json",
             "purchases.json",
             "sales.json",
-            "purchaseStates.json",
+            "clients.json",
+            "transactionStatus.json",
             "employees.json",
             "users.json",
             "expenses.json",
@@ -69,7 +70,8 @@ function main() {
             "shifts.json",
             "users.json",
             "employees.json",
-            "purchaseStates.json",
+            "clients.json",
+            "transactionStatus.json",
             "sales.json",
             "purchases.json",
             "purchasePredictions.json",
@@ -88,7 +90,18 @@ function main() {
         // Seeding data in the creation order
         for (const fileName of creationOrder) {
             const filePath = path_1.default.join(dataDirectory, fileName);
-            const jsonData = JSON.parse(fs_1.default.readFileSync(filePath, "utf-8"));
+            let jsonData;
+            try {
+                jsonData = JSON.parse(fs_1.default.readFileSync(filePath, "utf-8"));
+            }
+            catch (error) {
+                console.error(`Error parsing JSON from file ${fileName}:`);
+                continue;
+            }
+            if (jsonData.length === 0) {
+                console.log(`Skipping ${fileName} as it is empty.`);
+                continue;
+            }
             const modelName = path_1.default.basename(fileName, path_1.default.extname(fileName));
             const model = prisma[modelName];
             if (!model) {

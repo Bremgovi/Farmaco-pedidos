@@ -13,7 +13,6 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
 
   const { data: userData } = useGetLoginInfoQuery();
-  console.log("User data: " + userData);
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };

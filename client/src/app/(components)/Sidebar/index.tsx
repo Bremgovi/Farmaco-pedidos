@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
-import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, Truck, User } from "lucide-react";
+import { Archive, Clipboard, Layout, LucideIcon, Mail, Menu, ShoppingCart, SlidersHorizontal, Truck, User } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useGetLoginInfoQuery } from "@/state/api";
 
 interface SidebarLinkProps {
   href: string;
@@ -17,7 +17,6 @@ interface SidebarLinkProps {
 const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps) => {
   const pathname = usePathname();
   const isActive = pathname === href || (pathname === "/" && href === "/dashboard");
-
   return (
     <Link href={href}>
       <div
@@ -31,11 +30,10 @@ const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps)
     </Link>
   );
 };
-
-function Sidebar() {
+const Sidebar = () => {
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
-
+  const { data: userData } = useGetLoginInfoQuery();
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };
@@ -59,16 +57,17 @@ function Sidebar() {
         <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/sales" icon={Mail} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
+        {userData?.userTypeId == 1 && <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />}
         <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} />
+        {/*<SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} /> */}
       </div>
-      u{/* FOOTER */}
+      {/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
         <p className={`text-center text-xs text-gray-500`}>&copy; 2024 FARMACO-PEDIDOS</p>
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;

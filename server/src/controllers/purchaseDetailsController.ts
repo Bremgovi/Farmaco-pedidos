@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 
 export const createPurchaseDetails = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { productId, purchaseId, quantity, unitCost, totalCost, added_at, updated_at } = req.body;
+        const { productId, purchaseId, quantity, unitCost, totalCost, created_at, updated_at } = req.body;
         const purchaseDetails = await prisma.purchaseDetails.create({
             data: {
-                productId, purchaseId, quantity, unitCost, totalCost, added_at, updated_at
+                productId, purchaseId, quantity, unitCost, totalCost, created_at, updated_at
             }
         });
         const serializedData = {

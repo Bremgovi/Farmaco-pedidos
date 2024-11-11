@@ -65,6 +65,7 @@ const getLoginInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             where: { userId: userId },
             select: {
                 userId: true,
+                userTypeId: true,
                 username: true,
                 email: true,
                 password: true

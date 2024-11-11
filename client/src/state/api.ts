@@ -11,7 +11,6 @@ export interface Product {
     stockQuantity: number;
     minimumStock: number;
     maximumStock: number;
-
 }
 
 export interface NewProduct {
@@ -93,14 +92,14 @@ export interface UserType {
 export interface Purchase {
     purchaseId: string;
     userId: string;
-    purchaseStateId: number;
+    transactionStatusId: number;
     created_at: string;
     updated_at: string;
 }
 
 export interface NewPurchase {
     userId: string;
-    purchaseStateId: number;
+    transactionStatusId: number;
     created_at?: string;
     updated_at?: string;
 }
@@ -112,7 +111,7 @@ export interface PurchaseDetails {
     quantity:number;
     unitCost:number;
     totalCost:number;
-    added_at: string;
+    created_at: string;
     updated_at: string;
 }
 
@@ -122,7 +121,7 @@ export interface NewPurchaseDetails {
     quantity:number;
     unitCost:number;
     totalCost:number;
-    added_at?: string;
+    created_at?: string;
     updated_at?: string;
 }
 
@@ -277,6 +276,14 @@ export const api = createApi({
             }),
             invalidatesTags: ["Purchases"],
         }),
+        updatePurchase: build.mutation<Purchase, { purchaseId: string; updatedPurchase: Partial<NewPurchase> }>({
+            query: ({ purchaseId, updatedPurchase }) => ({
+                url: `/purchases/${purchaseId}`,
+                method: "PUT",
+                body: updatedPurchase,
+            }),
+            invalidatesTags: ["Purchases"],
+        }),
     })
 });
 
@@ -303,4 +310,5 @@ export const {
     useCreatePurchaseDetailsMutation,
     useDeletePurchaseDetailsMutation,
     useGetPurchaseDetailsByPurchaseIdQuery,
+    useUpdatePurchaseMutation
 } = api;

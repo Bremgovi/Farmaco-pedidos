@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePurchase = exports.createPurchase = exports.getPurchases = void 0;
+exports.updatePurchase = exports.deletePurchase = exports.createPurchase = exports.getPurchases = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getPurchases = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -24,10 +24,10 @@ const getPurchases = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getPurchases = getPurchases;
 const createPurchase = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { purchaseId, userId, purchaseStateId, created_at, updated_at } = req.body;
+        const { purchaseId, userId, transactionStatusId, created_at, updated_at } = req.body;
         const purchase = yield prisma.purchases.create({
             data: {
-                purchaseId, userId, purchaseStateId, created_at, updated_at
+                purchaseId, userId, transactionStatusId, created_at, updated_at
             }
         });
         res.status(200).json(purchase);
@@ -50,3 +50,18 @@ const deletePurchase = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.deletePurchase = deletePurchase;
+const updatePurchase = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { purchaseId, userId, transactionStatusId, created_at, updated_at } = req.body;
+        const updatedPurchase = yield prisma.purchases.update({
+            where: { purchaseId: id },
+            data: { purchaseId, userId, transactionStatusId, created_at, updated_at }
+        });
+        res.status(200).json(updatedPurchase);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error updating purchase: " + error });
+    }
+});
+exports.updatePurchase = updatePurchase;

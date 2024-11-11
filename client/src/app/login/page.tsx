@@ -95,20 +95,10 @@ const Login = () => {
               required
             />
           </div>
-          <div className="mb-6 text-blue-500">
-            <Link href="#" className="hover:underline">
-              Olvidaste tu contraseña?
-            </Link>
-          </div>
           <button type="submit" className="bg-sky-500 hover:bg-sky-600 text-white text-lg font-semibold rounded-md py-2 px-4 w-full transition duration-300" disabled={isLoading}>
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div className="mt-6 text-green-500 text-center">
-          <Link href="#" className="hover:underline font-semibold text-base">
-            Registrate aqui
-          </Link>
-        </div>
       </div>
       <ToastContainer
         position="top-right"

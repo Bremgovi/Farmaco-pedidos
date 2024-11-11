@@ -33,7 +33,6 @@ const Settings = () => {
     dispatch(setIsDarkMode(!isDarkMode));
   };
   const { data: userData } = useGetLoginInfoQuery();
-
   useEffect(() => {
     if (userData) {
       const updatedSettings = userSettings.map((setting) => {
@@ -47,7 +46,7 @@ const Settings = () => {
       });
       setUserSettings(updatedSettings);
     }
-  }, [userData]);
+  }, [userData, userSettings]);
 
   useEffect(() => {
     const updatedSettings = userSettings.map((setting) => {
@@ -64,7 +63,6 @@ const Settings = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    localStorage.removeItem("userToken");
     notify("Logged out", "success");
     setTimeout(() => {
       router.push("/login");

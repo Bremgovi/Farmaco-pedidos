@@ -1,0 +1,82 @@
+[
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Juan Pérez",
+    "paternalSurname": "Pérez",
+    "maternalSurname": "García",
+    "email": "juan.perez@example.com",
+    "phone": "123-456-7890"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440001",
+    "name": "María López",
+    "paternalSurname": "López",
+    "maternalSurname": "Martínez",
+    "email": "maria.lopez@example.com",
+    "phone": "098-765-4321"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440002",
+    "name": "Carlos Sánchez",
+    "paternalSurname": "Sánchez",
+    "maternalSurname": "Fernández",
+    "email": "carlos.sanchez@example.com",
+    "phone": "234-567-8901"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440003",
+    "name": "Ana Gómez",
+    "paternalSurname": "Gómez",
+    "maternalSurname": "Rodríguez",
+    "email": "ana.gomez@example.com",
+    "phone": "345-678-9012"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440004",
+    "name": "Luis Ramírez",
+    "paternalSurname": "Ramírez",
+    "maternalSurname": "Hernández",
+    "email": "luis.ramirez@example.com",
+    "phone": "456-789-0123"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440005",
+    "name": "Elena Torres",
+    "paternalSurname": "Torres",
+    "maternalSurname": "González",
+    "email": "elena.torres@example.com",
+    "phone": "567-890-1234"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440006",
+    "name": "Miguel Díaz",
+    "paternalSurname": "Díaz",
+    "maternalSurname": "Ruiz",
+    "email": "miguel.diaz@example.com",
+    "phone": "678-901-2345"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440007",
+    "name": "Laura Morales",
+    "paternalSurname": "Morales",
+    "maternalSurname": "Ortiz",
+    "email": "laura.morales@example.com",
+    "phone": "789-012-3456"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440008",
+    "name": "Jorge Castillo",
+    "paternalSurname": "Castillo",
+    "maternalSurname": "Vargas",
+    "email": "jorge.castillo@example.com",
+    "phone": "890-123-4567"
+  },
+  {
+    "clientId": "550e8400-e29b-41d4-a716-446655440009",
+    "name": "Sofía Mendoza",
+    "paternalSurname": "Mendoza",
+    "maternalSurname": "Silva",
+    "email": "sofia.mendoza@example.com",
+    "phone": "901-234-5678"
+  }
+]
