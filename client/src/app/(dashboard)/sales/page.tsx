@@ -5,9 +5,21 @@ import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
 import Delete from "@mui/icons-material/Delete";
-import { useGetProductsQuery, useCreatePurchaseMutation, useCreatePurchaseDetailsMutation, useGetLoginInfoQuery, useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
+import {
+  useGetProductsQuery,
+  useCreatePurchaseMutation,
+  useCreatePurchaseDetailsMutation,
+  useGetLoginInfoQuery,
+  useGetProductTypesQuery,
+  useGetSuppliersQuery,
+  useGetClientsQuery,
+  useCreateSaleMutation,
+  useCreateSaleDetailsMutation,
+} from "@/state/api";
 import { notify } from "@/utils/toastConfig";
 import { NotebookText } from "lucide-react";
+import Select from "react-select";
+import AsyncSelect from "react-select/async";
 
 type ProductFormData = {
   productTypeId: number;
@@ -17,6 +29,15 @@ type ProductFormData = {
   stockQuantity: number;
   minimumStock: number;
   maximumStock: number;
+};
+
+type Client = {
+  clientId: string;
+  name: string;
+  paternalSurname?: string;
+  maternalSurname?: string;
+  email?: string;
+  phone?: string;
 };
 
 type ProductFormDataWithID = ProductFormData & { productId: string };
@@ -30,13 +51,15 @@ const Sales = () => {
   const [cartSearchTerm, setCartSearchTerm] = useState("");
   const [cart, setCart] = useState<{ product: ProductFormDataWithID; quantity: number }[]>([]);
   const [sortCriteria, setSortCriteria] = useState<"subtotal" | "alphabetical">("alphabetical");
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const { data: products, isLoading, isError } = useGetProductsQuery();
   const { data: productTypes } = useGetProductTypesQuery();
   const { data: suppliers } = useGetSuppliersQuery();
   const { data: userData } = useGetLoginInfoQuery();
-  const [createPurchase] = useCreatePurchaseMutation();
-  const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
+  const { data: clients } = useGetClientsQuery();
+  const [createSale] = useCreateSaleMutation();
+  const [createSaleDetails] = useCreateSaleDetailsMutation();
 
   const sortedProducts = products?.slice().sort((a, b) => a.name.localeCompare(b.name));
   const filteredProducts = sortedProducts?.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -67,32 +90,49 @@ const Sales = () => {
     return cart.length;
   };
 
-  const handlePurchase = async () => {
+  const normalizeString = (str: string) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
+
+  const loadOptions = async (inputValue: string) => {
+    const normalizedInput = normalizeString(inputValue);
+    return clients ? clients.filter((client) => normalizeString(client.name).includes(normalizedInput)).map((client) => ({ value: client.clientId, label: client.name })) : [];
+  };
+
+  const handleRequest = async () => {
     try {
       if (!userData?.userId) {
         notify("Error: Usuario no identificado", "error");
         return;
       }
-      const purchaseData = {
+      if (!selectedClient) {
+        notify("Error: Cliente no seleccionado", "error");
+        return;
+      }
+      const saleData = {
         userId: userData.userId,
+        clientId: selectedClient.clientId,
         transactionStatusId: 1,
       };
-      const purchase = await createPurchase(purchaseData).unwrap();
+      const sale = await createSale(saleData).unwrap();
 
       for (const item of cart) {
-        const purchaseDetailsData = {
+        const saleDetailsData = {
           productId: item.product.productId,
-          purchaseId: purchase.purchaseId,
+          saleId: sale.saleId,
           quantity: item.quantity,
           unitCost: item.product.price,
           totalCost: item.product.price * item.quantity,
         };
-        await createPurchaseDetails(purchaseDetailsData);
+        await createSaleDetails(saleDetailsData);
       }
-      notify("Compra realizada correctamente", "success");
+      notify("Solicitud realizada correctamente", "success");
       setCart([]);
     } catch (error) {
-      notify("Error al realizar la compra", "error");
+      notify("Error al realizar la solicitud", "error");
     }
   };
 
@@ -145,6 +185,20 @@ const Sales = () => {
             <h2 className="text-xl font-semibold">Rellenar solicitud {getTotalItems() > 0 ? " (" + getTotalItems() + " articulos)" : null}</h2>
           </div>
         </div>
+        <div className="mb-4">
+          <span className="text-lg font-semibold">Cliente</span>
+          <AsyncSelect
+            cacheOptions
+            loadOptions={loadOptions}
+            defaultOptions={clients?.slice(0, 5).map((client) => ({ value: client.clientId, label: client.name }))}
+            onChange={(newValue) => {
+              const selected = clients?.find((client) => client.clientId === newValue?.value) || null;
+              setSelectedClient(selected);
+            }}
+            placeholder="Seleccionar cliente..."
+            className="mt-2 text-base"
+          />
+        </div>
         <div className="flex justify-between mb-4">
           <input type="text" placeholder="Buscar..." value={cartSearchTerm} onChange={(e) => setCartSearchTerm(e.target.value)} className="w-full p-2 border rounded" />
           <select value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value as "subtotal" | "alphabetical")} className="ml-2 p-2 border rounded">
@@ -193,8 +247,8 @@ const Sales = () => {
               >
                 Limpiar solicitud
               </button>
-              <button onClick={handlePurchase} className="w-2/3 bg-blue-500 text-white py-2 rounded mt-4 hover:bg-blue-600 transition duration-200">
-                Realizar Compra
+              <button onClick={handleRequest} className="w-2/3 bg-blue-500 text-white py-2 rounded mt-4 hover:bg-blue-600 transition duration-200">
+                Realizar solicitud
               </button>
             </div>
           </>

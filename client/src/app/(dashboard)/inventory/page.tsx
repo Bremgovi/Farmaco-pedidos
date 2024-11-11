@@ -185,6 +185,11 @@ const Inventory = () => {
         checkboxSelection
         onRowSelectionModelChange={handleRowSelection}
         className="bg-gray-100 shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+        sx={{
+          "& .MuiDataGrid-columnHeader": {
+            color: "rgb(17 24 39);",
+          },
+        }}
       />
 
       {/* MODAL */}

@@ -15,7 +15,7 @@ export interface Product {
 
 export interface NewProduct {
     productTypeId: number
-    supplierId: number
+    supplierId: number;
     name: string;
     price: number;
     rating?: number;
@@ -142,6 +142,44 @@ export interface NewClient {
     phone?: string;
 }
 
+export interface Sale {
+    saleId: string;
+    userId: string;
+    transactionStatusId: number;
+    clientId: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface NewSale {
+    userId: string;
+    transactionStatusId: number;
+    clientId: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface SaleDetails {
+    saleDetailsId: number;
+    productId: string;
+    saleId: string;
+    quantity: number;
+    unitCost: number;
+    totalCost: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface NewSaleDetails {
+    productId: string;
+    saleId: string;
+    quantity: number;
+    unitCost: number;
+    totalCost: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -157,7 +195,7 @@ const baseQueryWithAuth = fetchBaseQuery({
 export const api = createApi({
     baseQuery: baseQueryWithAuth,
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases", "Clients"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases", "Clients", "Sales"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -328,6 +366,67 @@ export const api = createApi({
             }),
             invalidatesTags: ["Clients"],
         }),
+        getSales: build.query<Sale[], void>({
+            query: () => "/sales",
+            providesTags: ["Sales"]
+        }),
+        createSale: build.mutation<Sale, NewSale>({
+            query: (newSale) => ({
+                url: "/sales",
+                method: "POST",
+                body: newSale,
+            }),
+            invalidatesTags: ["Sales"],
+        }),
+        updateSale: build.mutation<Sale, { saleId: string; updatedSale: Partial<NewSale> }>({
+            query: ({ saleId, updatedSale }) => ({
+                url: `/sales/${saleId}`,
+                method: "PUT",
+                body: updatedSale,
+            }),
+            invalidatesTags: ["Sales"],
+        }),
+        deleteSale: build.mutation<void, string>({
+            query: (saleId) => ({
+                url: `/sales/${saleId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Sales"],
+        }),
+        getSaleDetails: build.query<SaleDetails[], void>({
+            query: () => "/sale-details",
+            providesTags: ["Sales"]
+        }),
+        getSaleDetailsBySaleId: build.query<SaleDetails[], string>({
+            query: (saleId) => ({
+                url: `/sale-details/sale/${saleId}`,
+                params: { saleId },
+            }),
+            providesTags: ["Sales"],
+        }),
+        createSaleDetails: build.mutation<SaleDetails, NewSaleDetails>({
+            query: (newSaleDetails) => ({
+                url: "/sale-details",
+                method: "POST",
+                body: newSaleDetails,
+            }),
+            invalidatesTags: ["Sales"],
+        }),
+        updateSaleDetails: build.mutation<SaleDetails, { saleDetailsId: number; updatedSaleDetails: Partial<NewSaleDetails> }>({
+            query: ({ saleDetailsId, updatedSaleDetails }) => ({
+                url: `/sale-details/${saleDetailsId}`,
+                method: "PUT",
+                body: updatedSaleDetails,
+            }),
+            invalidatesTags: ["Sales"],
+        }),
+        deleteSaleDetails: build.mutation<void, number>({
+            query: (saleDetailsId) => ({
+                url: `/sale-details/${saleDetailsId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Sales"],
+        }),
     })
 });
 
@@ -358,5 +457,14 @@ export const {
     useGetClientsQuery,
     useCreateClientMutation,
     useUpdateClientMutation,
-    useDeleteClientMutation
+    useDeleteClientMutation,
+    useGetSalesQuery,
+    useCreateSaleMutation,
+    useUpdateSaleMutation,
+    useDeleteSaleMutation,
+    useGetSaleDetailsQuery,
+    useGetSaleDetailsBySaleIdQuery,
+    useCreateSaleDetailsMutation,
+    useUpdateSaleDetailsMutation,
+    useDeleteSaleDetailsMutation
 } = api;

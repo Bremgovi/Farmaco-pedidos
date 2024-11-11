@@ -682,6 +682,9 @@ video {
 .mt-8 {
   margin-top: 2rem;
 }
+.mt-10 {
+  margin-top: 2.5rem;
+}
 .block {
   display: block;
 }
@@ -774,6 +777,9 @@ video {
 }
 .w-full {
   width: 100%;
+}
+.w-4\/5 {
+  width: 80%;
 }
 .min-w-full {
   min-width: 100%;
@@ -1241,6 +1247,10 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: hsl(var(--twc-white) / var(--twc-white-opacity, var(--tw-text-opacity)));
+}
+.text-red-900 {
+  --tw-text-opacity: 1;
+  color: hsl(var(--twc-red-900) / var(--twc-red-900-opacity, var(--tw-text-opacity)));
 }
 .antialiased {
   -webkit-font-smoothing: antialiased;

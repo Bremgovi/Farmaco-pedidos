@@ -1,5 +1,5 @@
 "use client";
-import { Archive, Clipboard, Layout, LucideIcon, Mail, Menu, ShoppingCart, SlidersHorizontal, Truck, User } from "lucide-react";
+import { Archive, BookOpenText, Clipboard, Layout, LucideIcon, Mail, Menu, ShoppingCart, SlidersHorizontal, Truck, User } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import { usePathname } from "next/navigation";
@@ -57,7 +57,8 @@ const Sidebar = () => {
         <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/sales" icon={Mail} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
         {userData?.userTypeId == 1 && <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />}
         <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
         {/*<SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} /> */}

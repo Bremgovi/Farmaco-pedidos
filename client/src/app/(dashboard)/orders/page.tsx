@@ -48,7 +48,7 @@ const Orders = () => {
     { field: "quantity", headerName: "Cantidad", width: 150, type: "number" },
     { field: "unitCost", headerName: "Costo Unitario", width: 150, type: "number", renderCell: (params) => `$${params.value}` },
     { field: "totalCost", headerName: "Costo Total", width: 150, type: "number", renderCell: (params) => `$${params.value}` },
-    { field: "added_at", headerName: "Fecha de Adición", width: 200 },
+    { field: "created_at", headerName: "Fecha de Adición", width: 200 },
     { field: "updated_at", headerName: "Fecha de Actualización", width: 200 },
   ];
 
@@ -141,6 +141,11 @@ const Orders = () => {
             columns={columns}
             getRowId={(row) => row.purchaseDetailsId}
             className="bg-gray-100 shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+            sx={{
+              "& .MuiDataGrid-columnHeader": {
+                color: "rgb(17 24 39);",
+              },
+            }}
           />
           <div className="mt-4 text-right text-lg font-semibold">Costo total: ${calculateTotalCost()}</div>
         </>
