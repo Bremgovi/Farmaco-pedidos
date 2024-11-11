@@ -125,6 +125,23 @@ export interface NewPurchaseDetails {
     updated_at?: string;
 }
 
+export interface Client {
+    clientId: string;
+    name: string;
+    paternalSurname?: string;
+    maternalSurname?: string;
+    email?: string;
+    phone?: string;
+}
+
+export interface NewClient {
+    name: string;
+    paternalSurname?: string;
+    maternalSurname?: string;
+    email?: string;
+    phone?: string;
+}
+
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -140,7 +157,7 @@ const baseQueryWithAuth = fetchBaseQuery({
 export const api = createApi({
     baseQuery: baseQueryWithAuth,
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases", "Clients"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -284,6 +301,33 @@ export const api = createApi({
             }),
             invalidatesTags: ["Purchases"],
         }),
+        getClients: build.query<Client[], void>({
+            query: () => "/clients",
+            providesTags: ["Clients"]
+        }),
+        createClient: build.mutation<Client, NewClient>({
+            query: (newClient) => ({
+            url: "/clients",
+            method: "POST",
+            body: newClient
+            }),
+            invalidatesTags: ["Clients"]
+        }),
+        updateClient: build.mutation<Client, { clientId: string; updatedClient: Partial<NewClient> }>({
+            query: ({ clientId, updatedClient }) => ({
+            url: `/clients/${clientId}`,
+            method: "PUT",
+            body: updatedClient,
+            }),
+            invalidatesTags: ["Clients"],
+        }),
+        deleteClient: build.mutation<void, string>({
+            query: (clientId) => ({
+            url: `/clients/${clientId}`,
+            method: "DELETE",
+            }),
+            invalidatesTags: ["Clients"],
+        }),
     })
 });
 
@@ -310,5 +354,9 @@ export const {
     useCreatePurchaseDetailsMutation,
     useDeletePurchaseDetailsMutation,
     useGetPurchaseDetailsByPurchaseIdQuery,
-    useUpdatePurchaseMutation
+    useUpdatePurchaseMutation,
+    useGetClientsQuery,
+    useCreateClientMutation,
+    useUpdateClientMutation,
+    useDeleteClientMutation
 } = api;

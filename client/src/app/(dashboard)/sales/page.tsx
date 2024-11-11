@@ -1,26 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "@/app/(components)/Header";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
 import Delete from "@mui/icons-material/Delete";
-import {
-  useGetProductsQuery,
-  useUpdateProductMutation,
-  useCreatePurchaseMutation,
-  useCreatePurchaseDetailsMutation,
-  useGetLoginInfoQuery,
-  useGetProductTypesQuery,
-  useGetSuppliersQuery,
-} from "@/state/api";
+import { useGetProductsQuery, useCreatePurchaseMutation, useCreatePurchaseDetailsMutation, useGetLoginInfoQuery, useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
 import { notify } from "@/utils/toastConfig";
-import ShoppingCart from "@mui/icons-material/ShoppingCart";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs from "dayjs";
+import { NotebookText } from "lucide-react";
 
 type ProductFormData = {
   productTypeId: number;
@@ -42,38 +29,17 @@ const Sales = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartSearchTerm, setCartSearchTerm] = useState("");
   const [cart, setCart] = useState<{ product: ProductFormDataWithID; quantity: number }[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [sortCriteria, setSortCriteria] = useState<"subtotal" | "alphabetical">("alphabetical");
 
-  const { data: products, isLoading, isError, refetch } = useGetProductsQuery();
-  const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
-  const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
-
+  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const { data: productTypes } = useGetProductTypesQuery();
+  const { data: suppliers } = useGetSuppliersQuery();
   const { data: userData } = useGetLoginInfoQuery();
-  const [updateProduct] = useUpdateProductMutation();
   const [createPurchase] = useCreatePurchaseMutation();
   const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
 
   const sortedProducts = products?.slice().sort((a, b) => a.name.localeCompare(b.name));
   const filteredProducts = sortedProducts?.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-  useEffect(() => {
-    const fetchPredictions = async () => {
-      if (selectedDate) {
-        const month = dayjs(selectedDate).format("YYYY_MM");
-        const response = await fetch(`/json_prediction/predicciones_${month}.json`);
-        const predictions = await response.json();
-        const predictedCart = predictions
-          .map((prediction: any) => {
-            const product = products?.find((p: any) => p.name === prediction.Nombre);
-            return product && prediction.Cantidad > 0 ? { product, quantity: prediction.Cantidad } : null;
-          })
-          .filter((item: any) => item !== null);
-        setCart(predictedCart);
-      }
-    };
-    fetchPredictions();
-  }, [selectedDate, products]);
 
   const handleAddToCart = (product: ProductFormDataWithID) => {
     setCart((prevCart) => {
@@ -125,7 +91,6 @@ const Sales = () => {
       }
       notify("Compra realizada correctamente", "success");
       setCart([]);
-      setSelectedDate(null);
     } catch (error) {
       notify("Error al realizar la compra", "error");
     }
@@ -148,7 +113,7 @@ const Sales = () => {
     <div className="flex mx-auto w-full pb-5 flex-col lg:flex-row">
       {/* Catálogo de Productos */}
       <div className="w-full p-4 lg:w-2/3">
-        <Header name="Realizar pedido" />
+        <Header name="Catalogo de productos" />
         <input type="text" placeholder="Buscar productos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full p-2 mb-4 mt-5 border rounded" />
         <div className="max-h-64 overflow-y-auto sm:max-h-none sm:overflow-visible scrollbar-rounded">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -175,41 +140,22 @@ const Sales = () => {
       {/* Carrito de Compras */}
       <div className="w-full lg:w-1/3 p-4 bg-slate-200 rounded-lg">
         <div className="flex gap-4 text-4xl items-center mb-4">
-          <ShoppingCart fontSize="inherit" />
+          <NotebookText />
           <div className="flex flex-col gap-4 lg:flex-row items-center">
-            <h2 className="text-xl font-semibold">Carrito de Compras {getTotalItems() > 0 ? "( " + getTotalItems() + " articulos)" : null}</h2>
-            <div>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker", "DatePicker", "DatePicker"]}>
-                  <DatePicker
-                    label={"Date"}
-                    views={["month", "year"]}
-                    value={selectedDate ? dayjs(selectedDate) : null}
-                    onChange={(date) => setSelectedDate(date ? date.toDate() : null)}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </div>
+            <h2 className="text-xl font-semibold">Rellenar solicitud {getTotalItems() > 0 ? " (" + getTotalItems() + " articulos)" : null}</h2>
           </div>
         </div>
         <div className="flex justify-between mb-4">
-          <input
-            type="text"
-            placeholder="Buscar en el carrito..."
-            value={cartSearchTerm}
-            onChange={(e) => setCartSearchTerm(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
+          <input type="text" placeholder="Buscar..." value={cartSearchTerm} onChange={(e) => setCartSearchTerm(e.target.value)} className="w-full p-2 border rounded" />
           <select value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value as "subtotal" | "alphabetical")} className="ml-2 p-2 border rounded">
             <option value="alphabetical">Alfabético</option>
             <option value="subtotal">Subtotal</option>
           </select>
         </div>
         {cart.length === 0 ? (
-          <p>No hay productos en el carrito</p>
+          <p>No hay productos en la solicitud</p>
         ) : (
           <>
-            <div className="my-5 text-xl font-semibold">Total: {getTotal()}</div>
             <ul className="max-h-64 lg:max-h-96 overflow-y-auto scrollbar-rounded">
               {filteredCart.map((item) => (
                 <div key={item.product.productId} className="flex gap-5 items-center bg-slate-300 p-2 rounded-md mb-2">
@@ -242,11 +188,10 @@ const Sales = () => {
               <button
                 onClick={() => {
                   setCart([]);
-                  setSelectedDate(null);
                 }}
                 className="w-1/3 bg-red-500 text-white py-2 rounded mt-4 hover:bg-red-600 transition duration-200"
               >
-                Limpiar carrito
+                Limpiar solicitud
               </button>
               <button onClick={handlePurchase} className="w-2/3 bg-blue-500 text-white py-2 rounded mt-4 hover:bg-blue-600 transition duration-200">
                 Realizar Compra

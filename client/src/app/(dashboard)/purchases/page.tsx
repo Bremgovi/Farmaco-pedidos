@@ -45,12 +45,10 @@ const Purchases = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [sortCriteria, setSortCriteria] = useState<"subtotal" | "alphabetical">("alphabetical");
 
-  const { data: products, isLoading, isError, refetch } = useGetProductsQuery();
-  const { data: productTypes, isLoading: productTypesLoading, isError: productTypesError } = useGetProductTypesQuery();
-  const { data: suppliers, isLoading: suppliersLoading, isError: suppliersError } = useGetSuppliersQuery();
-
+  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const { data: productTypes } = useGetProductTypesQuery();
+  const { data: suppliers } = useGetSuppliersQuery();
   const { data: userData } = useGetLoginInfoQuery();
-  const [updateProduct] = useUpdateProductMutation();
   const [createPurchase] = useCreatePurchaseMutation();
   const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
 

@@ -21,6 +21,7 @@ const loginRoutes_1 = __importDefault(require("./routes/loginRoutes"));
 const authMiddleware_1 = __importDefault(require("./authMiddleware"));
 const purchaseRoutes_1 = __importDefault(require("./routes/purchaseRoutes"));
 const purchaseDetailsRoutes_1 = __importDefault(require("./routes/purchaseDetailsRoutes"));
+const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -41,6 +42,7 @@ app.use("/user-types", (0, authMiddleware_1.default)(), userTypeRoutes_1.default
 app.use("/expenses", (0, authMiddleware_1.default)(), expenseRoutes_1.default); //http://localhost:8000/expenses
 app.use("/purchases", (0, authMiddleware_1.default)(), purchaseRoutes_1.default); //http://localhost:8000/purchases
 app.use("/purchase-details", (0, authMiddleware_1.default)(), purchaseDetailsRoutes_1.default); //http://localhost:8000/purchase-details
+app.use("/clients", (0, authMiddleware_1.default)(), clientRoutes_1.default); //http://localhost:8000/clients
 app.use("/login", loginRoutes_1.default); //http://localhost:8000/login
 /* SERVER */
 const port = process.env.PORT || 3001;

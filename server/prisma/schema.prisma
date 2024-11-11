@@ -53,15 +53,18 @@ model Sales {
   saleId              String    @id @default(uuid())
   userId              String
   transactionStatusId Int
+  clientId            String
   created_at          DateTime? @default(now())
   updated_at          DateTime? @updatedAt
 
   user              Users             @relation(fields: [userId], references: [userId])
   transactionStatus TransactionStatus @relation(fields: [transactionStatusId], references: [transactionStatusId])
+  client            Clients           @relation(fields: [clientId], references: [clientId])
   saleDetails       SaleDetails[]
 
   @@index([userId], name: "sales_userid_index")
   @@index([transactionStatusId], name: "sales_transactionstatusid_index")
+  @@index([clientId], name: "sales_clientid_index")
 }
 
 model PurchasePredictions {
@@ -98,7 +101,6 @@ model SaleDetails {
   saleDetailsId BigInt    @id @default(autoincrement())
   productId     String
   saleId        String
-  timestamp     DateTime
   quantity      Int
   unitCost      Decimal   @db.Decimal(10, 2)
   totalCost     Decimal   @db.Decimal(10, 2)
@@ -237,6 +239,8 @@ model Clients {
   maternalSurname String?
   email           String?
   phone           String?
+
+  sales Sales[]
 }
 
 model TransactionStatus {
