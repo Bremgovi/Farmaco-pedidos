@@ -29,6 +29,9 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
 export const deleteSale = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
+        await prisma.saleDetails.deleteMany({
+            where: { saleId: id }
+        });
         await prisma.sales.delete({
             where: { saleId: id }
         });

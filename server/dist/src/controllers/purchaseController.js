@@ -40,10 +40,13 @@ exports.createPurchase = createPurchase;
 const deletePurchase = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        yield prisma.purchaseDetails.deleteMany({
+            where: { purchaseId: id }
+        });
         yield prisma.purchases.delete({
             where: { purchaseId: id }
         });
-        res.status(200).json({ message: "Purchase deleted successfully" });
+        res.status(200).json({ message: "Purchase and related details deleted successfully" });
     }
     catch (error) {
         res.status(500).json({ message: "Error deleting purchase: " + error });

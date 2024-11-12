@@ -29,10 +29,13 @@ export const createPurchase = async (req: Request, res: Response): Promise<void>
 export const deletePurchase = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
+        await prisma.purchaseDetails.deleteMany({
+            where: { purchaseId: id }
+        });
         await prisma.purchases.delete({
             where: { purchaseId: id }
         });
-        res.status(200).json({ message: "Purchase deleted successfully" });
+        res.status(200).json({ message: "Purchase and related details deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error deleting purchase: " + error });
     }

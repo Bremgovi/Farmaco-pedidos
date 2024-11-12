@@ -40,6 +40,9 @@ exports.createSale = createSale;
 const deleteSale = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        yield prisma.saleDetails.deleteMany({
+            where: { saleId: id }
+        });
         yield prisma.sales.delete({
             where: { saleId: id }
         });

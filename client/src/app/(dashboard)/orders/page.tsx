@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useGetPurchasesQuery, useGetPurchaseDetailsByPurchaseIdQuery, useGetProductsQuery, useUpdateProductMutation, useUpdatePurchaseMutation } from "@/state/api";
+import {
+  useGetPurchasesQuery,
+  useGetPurchaseDetailsByPurchaseIdQuery,
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useUpdatePurchaseMutation,
+  useDeletePurchaseMutation,
+} from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { withAuth } from "../withAuth";
+import { Trash2 } from "lucide-react";
 
 const Orders = () => {
   const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(null);
@@ -18,6 +26,7 @@ const Orders = () => {
   });
   const [updateProduct] = useUpdateProductMutation();
   const [updatePurchase] = useUpdatePurchaseMutation();
+  const [deletePurchase] = useDeletePurchaseMutation();
   const calculateTotalCost = () => {
     return purchaseDetails?.reduce((total, item) => total + Number(item.totalCost), 0) || 0;
   };
@@ -96,6 +105,17 @@ const Orders = () => {
     }
   };
 
+  const handleDeleteOrder = async () => {
+    try {
+      if (!selectedPurchaseId) return;
+      await deletePurchase(selectedPurchaseId);
+      notify("Orden eliminada", "success");
+      setSelectedPurchaseId(null);
+    } catch {
+      notify("Error al eliminar la orden", "error");
+    }
+  };
+
   if (purchasesLoading) {
     return <div className="py-4">Loading...</div>;
   }
@@ -136,18 +156,22 @@ const Orders = () => {
               <span className="text-green-600">Completado</span>
             )}
           </div>
+          <div className="flex items-center text-red-400 hover:bg-red-200 cursor-pointer max-w-fit rounded-full p-3 mt-5" onClick={handleDeleteOrder}>
+            <Trash2 />
+            <span className="font-bold ml-2 text-xl">Eliminar pedido</span>
+          </div>
           <DataGrid
             rows={purchaseDetails || []}
             columns={columns}
             getRowId={(row) => row.purchaseDetailsId}
-            className="bg-gray-100 shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+            className="bg-gray-100 shadow rounded-lg border border-gray-200 mt-2 !text-gray-700"
             sx={{
               "& .MuiDataGrid-columnHeader": {
                 color: "rgb(17 24 39);",
               },
             }}
           />
-          <div className="mt-4 text-right text-lg font-semibold">Costo total: ${calculateTotalCost()}</div>
+          <div className="mt-4 text-right text-lg font-semibold">Costo total: ${calculateTotalCost().toFixed(2)}</div>
         </>
       )}
       {purchases.find((purchase) => purchase.purchaseId === selectedPurchaseId)?.transactionStatusId === 1 && (

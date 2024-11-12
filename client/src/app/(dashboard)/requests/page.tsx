@@ -1,13 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useGetSalesQuery, useGetSaleDetailsBySaleIdQuery, useGetProductsQuery, useUpdateProductMutation, useUpdateSaleMutation, useGetClientsQuery } from "@/state/api";
+import {
+  useGetSalesQuery,
+  useGetSaleDetailsBySaleIdQuery,
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useUpdateSaleMutation,
+  useGetClientsQuery,
+  useDeleteSaleMutation,
+} from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Bounce, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { withAuth } from "../withAuth";
+import { Trash2 } from "lucide-react";
 
 const Requests = () => {
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
@@ -19,6 +28,7 @@ const Requests = () => {
   });
   const [updateProduct] = useUpdateProductMutation();
   const [updateSale] = useUpdateSaleMutation();
+  const [deleteSale] = useDeleteSaleMutation();
   const calculateTotalCost = () => {
     return saleDetails?.reduce((total, item) => total + Number(item.totalCost), 0) || 0;
   };
@@ -96,6 +106,17 @@ const Requests = () => {
     }
   };
 
+  const handleDeleteRequest = async () => {
+    try {
+      if (!selectedSaleId) return;
+      await deleteSale(selectedSaleId);
+      notify("Solicitud eliminada", "success");
+      setSelectedSaleId(null);
+    } catch {
+      notify("Error al eliminar la solicitud", "error");
+    }
+  };
+
   if (salesLoading) {
     return <div className="py-4">Loading...</div>;
   }
@@ -150,6 +171,10 @@ const Requests = () => {
           >
             Fecha de actualización: {formatDateTime(sales.find((sale) => sale.saleId === selectedSaleId)?.updated_at || "")}
           </div>
+          <div className="flex items-center text-red-400 hover:bg-red-200 cursor-pointer max-w-fit rounded-full p-3 mt-5" onClick={handleDeleteRequest}>
+            <Trash2 />
+            <span className="font-bold ml-2 text-xl">Eliminar solicitud</span>
+          </div>
           <DataGrid
             rows={saleDetails || []}
             columns={columns}
@@ -161,7 +186,7 @@ const Requests = () => {
               },
             }}
           />
-          <div className="mt-4 text-right text-lg font-semibold">Costo total: ${calculateTotalCost()}</div>
+          <div className="mt-4 text-right text-lg font-semibold">Costo total: ${Number(calculateTotalCost()).toFixed(2)}</div>
         </>
       )}
       {sales.find((sale) => sale.saleId === selectedSaleId)?.transactionStatusId === 1 && (
