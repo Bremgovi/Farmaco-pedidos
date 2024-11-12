@@ -16,9 +16,14 @@ import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { withAuth } from "../withAuth";
 import { Trash2 } from "lucide-react";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 
 const Orders = () => {
   const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const { data: products } = useGetProductsQuery();
   const { data: purchases, isLoading: purchasesLoading, isError: purchasesError } = useGetPurchasesQuery();
   const { data: purchaseDetails } = useGetPurchaseDetailsByPurchaseIdQuery(selectedPurchaseId ?? "", {
@@ -116,6 +121,8 @@ const Orders = () => {
     }
   };
 
+  const filteredPurchases = selectedDate ? purchases?.filter((purchase) => new Date(purchase.created_at).toDateString() === selectedDate.toDateString()) : purchases;
+
   if (purchasesLoading) {
     return <div className="py-4">Loading...</div>;
   }
@@ -128,9 +135,12 @@ const Orders = () => {
       <div className="flex flex-row justify-between">
         <Header name="Órdenes de Compra" />
         <div className="flex gap-4">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Seleccionar fecha" value={selectedDate ? dayjs(selectedDate) : null} onChange={(newValue) => setSelectedDate(newValue ? newValue.toDate() : null)} />
+          </LocalizationProvider>
           <select onChange={handlePurchaseChange} className="border rounded p-2">
             <option value="">Seleccione un pedido</option>
-            {purchases.map((purchase) => (
+            {filteredPurchases?.map((purchase) => (
               <option
                 key={purchase.purchaseId}
                 value={purchase.purchaseId}

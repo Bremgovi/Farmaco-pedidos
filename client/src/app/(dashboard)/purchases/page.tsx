@@ -178,14 +178,12 @@ const Purchases = () => {
             <h2 className="text-xl font-semibold">Carrito de Compras {getTotalItems() > 0 ? "( " + getTotalItems() + " articulos)" : null}</h2>
             <div>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker", "DatePicker", "DatePicker"]}>
-                  <DatePicker
-                    label={"Date"}
-                    views={["month", "year"]}
-                    value={selectedDate ? dayjs(selectedDate) : null}
-                    onChange={(date) => setSelectedDate(date ? date.toDate() : null)}
-                  />
-                </DemoContainer>
+                <DatePicker
+                  label={"Date"}
+                  views={["month", "year"]}
+                  value={selectedDate ? dayjs(selectedDate) : null}
+                  onChange={(date) => setSelectedDate(date ? date.toDate() : null)}
+                />
               </LocalizationProvider>
             </div>
           </div>

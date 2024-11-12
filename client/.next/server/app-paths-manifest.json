@@ -1,8 +1,8 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
   "/(dashboard)/requests/page": "app/(dashboard)/requests/page.js",
-  "/(dashboard)/sales/page": "app/(dashboard)/sales/page.js",
-  "/(dashboard)/settings/page": "app/(dashboard)/settings/page.js"
+  "/(dashboard)/settings/page": "app/(dashboard)/settings/page.js",
+  "/(dashboard)/purchases/page": "app/(dashboard)/purchases/page.js"
 }
