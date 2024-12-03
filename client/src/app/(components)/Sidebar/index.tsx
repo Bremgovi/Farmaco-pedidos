@@ -30,12 +30,61 @@ const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps)
     </Link>
   );
 };
+
 const Sidebar = () => {
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
   const { data: userData } = useGetLoginInfoQuery();
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
+  };
+
+  const userTypeId = userData?.userTypeId;
+
+  const renderLinks = () => {
+    switch (userTypeId) {
+      case 1:
+        return (
+          <>
+            <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
+          </>
+        );
+      default:
+        return null;
+    }
   };
 
   const sidebarClassnames = `fixed flex flex-col ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"} bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40`;
@@ -51,18 +100,7 @@ const Sidebar = () => {
         </button>
       </div>
       {/* LINKS */}
-      <div className="flex-grow mt-8">
-        <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
-        {userData?.userTypeId == 1 && <SidebarLink href="/users" icon={User} label="Usuarios" isCollapsed={isSidebarCollapsed} />}
-        <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
-        {/*<SidebarLink href="/expenses" icon={CircleDollarSign} label="Gastos" isCollapsed={isSidebarCollapsed} /> */}
-      </div>
+      <div className="flex-grow mt-8">{renderLinks()}</div>
       {/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
         <p className={`text-center text-xs text-gray-500`}>&copy; 2024 FARMACO-PEDIDOS</p>

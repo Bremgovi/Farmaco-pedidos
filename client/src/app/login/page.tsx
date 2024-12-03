@@ -7,7 +7,7 @@ import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { setUserInfo, setUserToken } from "@/state";
+import { login as loginAction } from "@/state";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "../redux";
 
@@ -19,15 +19,14 @@ const Login = () => {
     username: "",
     password: "",
   });
-
+  /*
   useEffect(() => {
-    //const token = localStorage.getItem("userToken");
     if (token) {
       console.log(token);
       router.push("/dashboard");
     }
-  }, []);
-
+  }, [token]);
+  */
   const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -37,9 +36,7 @@ const Login = () => {
       console.log("Login successful, token:", result.token);
       notify("Login Succesful", "success");
 
-      //localStorage.setItem("userToken", result.token);
-      dispatch(setUserToken(result.token));
-      dispatch(setUserInfo({ username: formData.username, password: formData.password }));
+      dispatch(loginAction({ userInfo: { username: formData.username, password: formData.password }, userToken: result.token }));
 
       setTimeout(() => {
         router.push("/dashboard");

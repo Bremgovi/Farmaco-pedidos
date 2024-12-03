@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Header from "@/app/(components)/Header";
-import { logoutUser, setIsDarkMode } from "@/state";
+import { logout, logoutUser, setIsDarkMode } from "@/state";
 import { notify } from "@/utils/toastConfig";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ const Settings = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    dispatch(logout());
     notify("Logged out", "success");
     setTimeout(() => {
       router.push("/login");

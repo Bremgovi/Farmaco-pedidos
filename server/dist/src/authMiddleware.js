@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const authenticateToken = (requiredType) => (req, res, next) => {
+const authenticateToken = (requiredTypes) => (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
@@ -16,8 +16,12 @@ const authenticateToken = (requiredType) => (req, res, next) => {
             res.status(403).json({ message: "Token is invalid" + err });
             return;
         }
-        if (requiredType !== undefined && user.user.userTypeId !== requiredType) {
-            return res.status(403).json({ message: 'Access forbidden: insufficient privileges' });
+        const userTypeId = user.user.userTypeId;
+        if (requiredTypes !== undefined) {
+            const typesArray = Array.isArray(requiredTypes) ? requiredTypes : [requiredTypes];
+            if (!typesArray.includes(userTypeId)) {
+                return res.status(403).json({ message: 'Access forbidden: insufficient privileges' });
+            }
         }
         req.user = user;
         next();

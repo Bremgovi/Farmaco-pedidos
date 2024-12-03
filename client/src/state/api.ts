@@ -1,5 +1,6 @@
 import { RootState } from "@/app/redux";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import { use } from "react";
 
 export interface Product {
     productId: string;
@@ -86,6 +87,10 @@ export interface NewUser {
 
 export interface UserType {
     userTypeId: number;
+    userType: string;
+}
+
+export interface NewUserType {
     userType: string;
 }
 
@@ -180,6 +185,18 @@ export interface NewSaleDetails {
     updated_at?: string;
 }
 
+export interface DatasetEntry {
+    date: string;
+    quantity: number;
+    name: string;
+}
+
+export interface MonthlyBudget{
+    monthlyBudgetId: number;
+    month: number;
+    budget: number;
+}
+
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -195,7 +212,7 @@ const baseQueryWithAuth = fetchBaseQuery({
 export const api = createApi({
     baseQuery: baseQueryWithAuth,
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases", "Clients", "Sales"],
+    tagTypes: ["DashboardMetrics", "Products", "ProductTypes","Suppliers","Users", "UserTypes", "Expenses", "Login", "Purchases", "Clients", "Sales", "Dataset", "DatasetPredictions", "FetchJson", "MonthlyBudget"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
@@ -269,6 +286,29 @@ export const api = createApi({
         getUserTypes: build.query<UserType[], void>({
             query: () => "/user-types",
             providesTags: ["UserTypes"] 
+        }),
+        createUserType: build.mutation<UserType, NewUserType>({
+            query: (newUserType) => ({
+                url: "/user-types",
+                method: "POST",
+                body: newUserType,
+            }),
+            invalidatesTags: ["UserTypes"],
+        }),
+        updateUserType: build.mutation<UserType, { userTypeId: number; updatedUserType: Partial<NewUserType> }>({
+            query: ({ userTypeId, updatedUserType }) => ({
+                url: `/user-types/${userTypeId}`,
+                method: "PUT",
+                body: updatedUserType,
+            }),
+            invalidatesTags: ["UserTypes"],
+        }),
+        deleteUserType: build.mutation<void, number>({
+            query: (userTypeId) => ({
+                url: `/user-types/${userTypeId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["UserTypes"],
         }),
         getExpensesByCategory: build.query<ExpenseByCategorySummary[], void>({
             query: () => "/expenses",
@@ -427,6 +467,32 @@ export const api = createApi({
             }),
             invalidatesTags: ["Sales"],
         }),
+        writeDataset: build.mutation<void, DatasetEntry>({
+            query: (entry) => ({
+                url: "/dataset",
+                method: "POST",
+                body: entry,
+            }),
+            invalidatesTags: ["Dataset"],
+        }),
+        makePrediction: build.mutation<void, void>({
+            query: () => ({
+                url: "/dataset-prediction",
+                method: "POST",
+            }),
+            invalidatesTags: ["DatasetPredictions"],
+        }),
+        fetchJson: build.query<any, { year: number; month: number }>({
+            query: ({ year, month }) => ({
+            url: `/fetch-json/fetch/${year}/${month}`,
+            params: { year, month },
+            }),
+            providesTags: ["FetchJson"],
+        }),
+        getMonthlyBudget: build.query<MonthlyBudget[], void>({
+            query: () => "/monthly-budget",
+            providesTags: ["MonthlyBudget"]
+        }),
     })
 });
 
@@ -442,7 +508,6 @@ export const {
     useCreateUserMutation,
     useDeleteUserMutation,
     useUpdateUserMutation,
-    useGetUserTypesQuery,
     useGetExpensesByCategoryQuery,
     useLoginMutation,
     useGetLoginInfoQuery,
@@ -466,5 +531,13 @@ export const {
     useGetSaleDetailsBySaleIdQuery,
     useCreateSaleDetailsMutation,
     useUpdateSaleDetailsMutation,
-    useDeleteSaleDetailsMutation
+    useDeleteSaleDetailsMutation,
+    useWriteDatasetMutation,
+    useMakePredictionMutation,
+    useFetchJsonQuery,
+    useGetUserTypesQuery,
+    useCreateUserTypeMutation,
+    useUpdateUserTypeMutation,
+    useDeleteUserTypeMutation,
+    useGetMonthlyBudgetQuery
 } = api;

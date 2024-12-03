@@ -2,6 +2,9 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import Header from "@/app/(components)/Header";
 import { useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
 import Select from "react-select";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { notify } from "@/utils/toastConfig";
+import "react-toastify/dist/ReactToastify.css";
 
 type ProductFormData = {
   productTypeId: number;
@@ -41,10 +44,12 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
       [name]:
         name === "productTypeId"
           ? parseInt(value)
-          : name === "minimumStock" || name === "maximumStock" || name === "stockQuantity" || name === "rating"
-          ? parseInt(value) // Parse to integer
+          : name === "minimumStock" || name === "maximumStock" || name === "stockQuantity"
+          ? Math.max(0, parseInt(value)) // Ensure non-negative values
+          : name === "rating"
+          ? Math.min(5, Math.max(1, parseInt(value))) // Ensure rating is between 1 and 5
           : ["price"].includes(name)
-          ? parseFloat(value)
+          ? Math.max(0, parseFloat(value)) // Ensure non-negative values
           : value,
     });
   };
@@ -58,6 +63,18 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (formData.maximumStock < formData.minimumStock) {
+      notify("El stock máximo debe ser mayor o igual al stock mínimo", "error");
+      return;
+    }
+    if (formData.stockQuantity < formData.minimumStock) {
+      notify("El stock actual debe ser mayor o igual al stock mínimo", "error");
+      return;
+    }
+    if (formData.stockQuantity > formData.maximumStock) {
+      notify("El stock actual debe ser menor o igual al stock máximo", "error");
+      return;
+    }
     onCreate(formData);
     onClose();
   };
@@ -131,31 +148,40 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
           <label htmlFor="productPrice" className={labelCssStyles}>
             Precio
           </label>
-          <input type="number" name="price" placeholder="Price" onChange={handleChange} value={formData.price} className={inputCssStyles} required />
+          <input type="number" name="price" placeholder="Price" onChange={handleChange} value={formData.price} className={inputCssStyles} required min="0" />
 
           {/* STOCK QUANTITY */}
           <label htmlFor="stockQuantity" className={labelCssStyles}>
             Stock
           </label>
-          <input type="number" name="stockQuantity" placeholder="Stock Quantity" onChange={handleChange} value={formData.stockQuantity} className={inputCssStyles} required />
+          <input
+            type="number"
+            name="stockQuantity"
+            placeholder="Stock Quantity"
+            onChange={handleChange}
+            value={formData.stockQuantity}
+            className={inputCssStyles}
+            required
+            min="0"
+          />
 
           {/* MINIMUM STOCK*/}
           <label htmlFor="minimumStock" className={labelCssStyles}>
             Stock Minimo
           </label>
-          <input type="number" name="minimumStock" placeholder="Stock Minimo" onChange={handleChange} value={formData.minimumStock} className={inputCssStyles} required />
+          <input type="number" name="minimumStock" placeholder="Stock Minimo" onChange={handleChange} value={formData.minimumStock} className={inputCssStyles} required min="0" />
 
           {/* MAXIMUM STOCK*/}
           <label htmlFor="maximumStock" className={labelCssStyles}>
             Stock Maximo
           </label>
-          <input type="number" name="maximumStock" placeholder="Stock Maximo" onChange={handleChange} value={formData.maximumStock} className={inputCssStyles} required />
+          <input type="number" name="maximumStock" placeholder="Stock Maximo" onChange={handleChange} value={formData.maximumStock} className={inputCssStyles} required min="0" />
 
           {/* RATING */}
           <label htmlFor="rating" className={labelCssStyles}>
             Rating
           </label>
-          <input type="number" name="rating" placeholder="Rating" onChange={handleChange} value={formData.rating} className={inputCssStyles} required />
+          <input type="number" name="rating" placeholder="Rating" onChange={handleChange} value={formData.rating} className={inputCssStyles} required min="1" max="5" />
 
           {/* CREATE ACTIONS */}
           <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
@@ -166,6 +192,19 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

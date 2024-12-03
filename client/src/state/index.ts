@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface InitialStateTypes {
   isSidebarCollapsed: boolean;
@@ -15,6 +15,9 @@ const initialState: InitialStateTypes = {
   userToken: null,
   success: false,
 };
+
+export const logout = createAction("logout");
+export const login = createAction<{ userInfo: {}; userToken: string }>("login");
 
 export const globalSlice = createSlice({
   name: "global",
@@ -36,6 +39,16 @@ export const globalSlice = createSlice({
       state.userToken = null;
       state.userInfo = {};
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(logout, (state) => {
+        return initialState;
+      })
+      .addCase(login, (state, action) => {
+        state.userInfo = action.payload.userInfo;
+        state.userToken = action.payload.userToken;
+      });
   },
 });
 

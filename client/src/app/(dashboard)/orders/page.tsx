@@ -123,6 +123,8 @@ const Orders = () => {
 
   const filteredPurchases = selectedDate ? purchases?.filter((purchase) => new Date(purchase.created_at).toDateString() === selectedDate.toDateString()) : purchases;
 
+  const sortedAndLimitedPurchases = [...(filteredPurchases || [])].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 10);
+
   if (purchasesLoading) {
     return <div className="py-4">Loading...</div>;
   }
@@ -133,23 +135,29 @@ const Orders = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
-        <Header name="Órdenes de Compra" />
-        <div className="flex gap-4">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Seleccionar fecha" value={selectedDate ? dayjs(selectedDate) : null} onChange={(newValue) => setSelectedDate(newValue ? newValue.toDate() : null)} />
-          </LocalizationProvider>
-          <select onChange={handlePurchaseChange} className="border rounded p-2">
-            <option value="">Seleccione un pedido</option>
-            {filteredPurchases?.map((purchase) => (
-              <option
-                key={purchase.purchaseId}
-                value={purchase.purchaseId}
-                className={`${purchase.transactionStatusId === 1 ? "bg-blue-100" : purchase.transactionStatusId === 3 ? "bg-red-100" : "bg-green-100"}`}
-              >
-                {formatDateTime(purchase.created_at)}
-              </option>
-            ))}
-          </select>
+        <div className="flex gap-4 w-full items-center justify-between flex-col lg:flex-row">
+          <Header name="Órdenes de Compra" />
+          <div className="flex gap-2 flex-col lg:flex-row">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Seleccionar fecha"
+                value={selectedDate ? dayjs(selectedDate) : null}
+                onChange={(newValue) => setSelectedDate(newValue ? newValue.toDate() : null)}
+              />
+            </LocalizationProvider>
+            <select onChange={handlePurchaseChange} className="border rounded p-2 bg-gray-100">
+              <option value="">Seleccione un pedido</option>
+              {sortedAndLimitedPurchases.map((purchase) => (
+                <option
+                  key={purchase.purchaseId}
+                  value={purchase.purchaseId}
+                  className={`${purchase.transactionStatusId === 1 ? "bg-blue-100" : purchase.transactionStatusId === 3 ? "bg-red-100" : "bg-green-100"}`}
+                >
+                  {formatDateTime(purchase.created_at)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       {selectedPurchaseId == "" || !selectedPurchaseId ? (

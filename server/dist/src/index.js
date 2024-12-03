@@ -24,6 +24,10 @@ const purchaseDetailsRoutes_1 = __importDefault(require("./routes/purchaseDetail
 const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
 const saleRoutes_1 = __importDefault(require("./routes/saleRoutes"));
 const saleDetailsRoutes_1 = __importDefault(require("./routes/saleDetailsRoutes"));
+const datasetRoutes_1 = __importDefault(require("./routes/datasetRoutes"));
+const datasetPredictionRoutes_1 = __importDefault(require("./routes/datasetPredictionRoutes"));
+const fetchJsonRoutes_1 = __importDefault(require("./routes/fetchJsonRoutes"));
+const monthlyBudgetRoutes_1 = __importDefault(require("./routes/monthlyBudgetRoutes"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -35,19 +39,24 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ limit: '10mb', extended: false }));
 app.use((0, cors_1.default)());
 /* ROUTES */
-app.use("/dashboard", (0, authMiddleware_1.default)(), dashboardRoutes_1.default); //http://localhost:8000/dashboard
-app.use("/products", (0, authMiddleware_1.default)(), productRoutes_1.default); //http://localhost:8000/products
-app.use("/product-types", (0, authMiddleware_1.default)(), productTypeRoutes_1.default); //http://localhost:8000/product-types
-app.use("/suppliers", (0, authMiddleware_1.default)(), supplierRoutes_1.default); //http://localhost:8000/suppliers
-app.use("/users", (0, authMiddleware_1.default)(1), userRoutes_1.default); //http://localhost:8000/users
-app.use("/user-types", (0, authMiddleware_1.default)(), userTypeRoutes_1.default); //http://localhost:8000/user-types
-app.use("/expenses", (0, authMiddleware_1.default)(), expenseRoutes_1.default); //http://localhost:8000/expenses
-app.use("/purchases", (0, authMiddleware_1.default)(), purchaseRoutes_1.default); //http://localhost:8000/purchases
-app.use("/purchase-details", (0, authMiddleware_1.default)(), purchaseDetailsRoutes_1.default); //http://localhost:8000/purchase-details
-app.use("/sales", (0, authMiddleware_1.default)(), saleRoutes_1.default); //http://localhost:8000/sales
-app.use("/sale-details", (0, authMiddleware_1.default)(), saleDetailsRoutes_1.default); //http://localhost:8000/sale-details
-app.use("/clients", (0, authMiddleware_1.default)(), clientRoutes_1.default); //http://localhost:8000/clients
+app.use("/dashboard", (0, authMiddleware_1.default)([1]), dashboardRoutes_1.default); //http://localhost:8000/dashboard
+app.use("/products", (0, authMiddleware_1.default)([1, 2]), productRoutes_1.default); //http://localhost:8000/products
+app.use("/product-types", (0, authMiddleware_1.default)([1, 2]), productTypeRoutes_1.default); //http://localhost:8000/product-types
+app.use("/suppliers", (0, authMiddleware_1.default)([1, 2]), supplierRoutes_1.default); //http://localhost:8000/suppliers
+app.use("/users", (0, authMiddleware_1.default)([1]), userRoutes_1.default); //http://localhost:8000/users
+app.use("/user-types", (0, authMiddleware_1.default)([1, 2]), userTypeRoutes_1.default); //http://localhost:8000/user-types
+app.use("/expenses", (0, authMiddleware_1.default)([1, 2]), expenseRoutes_1.default); //http://localhost:8000/expenses
+app.use("/purchases", (0, authMiddleware_1.default)([1, 2]), purchaseRoutes_1.default); //http://localhost:8000/purchases
+app.use("/purchase-details", (0, authMiddleware_1.default)([1, 2]), purchaseDetailsRoutes_1.default); //http://localhost:8000/purchase-details
+app.use("/sales", (0, authMiddleware_1.default)([1, 2]), saleRoutes_1.default); //http://localhost:8000/sales
+app.use("/sale-details", (0, authMiddleware_1.default)([1, 2]), saleDetailsRoutes_1.default); //http://localhost:8000/sale-details
+app.use("/clients", (0, authMiddleware_1.default)([1]), clientRoutes_1.default); //http://localhost:8000/clients
 app.use("/login", loginRoutes_1.default); //http://localhost:8000/login
+app.use("/dataset", datasetRoutes_1.default); //http://localhost:8000/dataset
+app.use("/dataset-prediction", datasetPredictionRoutes_1.default); //http://localhost:8000/dataset-prediction
+app.use("/fetch-json", fetchJsonRoutes_1.default); //http://localhost:8000/fetch-json
+app.use("/monthly-budget", monthlyBudgetRoutes_1.default); //http://localhost:8000/monthly-budget
+app.use(express_1.default.static('public'));
 /* SERVER */
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

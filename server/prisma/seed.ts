@@ -28,6 +28,7 @@ async function main() {
 
   // Deletion order
   const deletionOrder = [
+    "monthlyBudget.json",
     "purchaseDetails.json",
     "saleDetails.json",
     "predictionDetails.json",
@@ -53,6 +54,7 @@ async function main() {
 
   // Creation order
   const creationOrder = [
+    "monthlyBudget.json",
     "productTypes.json",
     "suppliers.json",
     "userTypes.json",

@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
 import DashboardWrapper from "./dashboardWrapper";
-import { useRouter } from "next/navigation";
-import { useAppSelector } from "../redux";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",

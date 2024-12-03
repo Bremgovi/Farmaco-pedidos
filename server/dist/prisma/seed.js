@@ -39,6 +39,7 @@ function main() {
         const dataDirectory = path_1.default.join(__dirname, "seedData");
         // Deletion order
         const deletionOrder = [
+            "monthlyBudget.json",
             "purchaseDetails.json",
             "saleDetails.json",
             "predictionDetails.json",
@@ -63,6 +64,7 @@ function main() {
         ];
         // Creation order
         const creationOrder = [
+            "monthlyBudget.json",
             "productTypes.json",
             "suppliers.json",
             "userTypes.json",

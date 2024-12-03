@@ -9,6 +9,8 @@ import {
   useUpdateSaleMutation,
   useGetClientsQuery,
   useDeleteSaleMutation,
+  useMakePredictionMutation,
+  useWriteDatasetMutation,
 } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -34,6 +36,9 @@ const Requests = () => {
   const [updateProduct] = useUpdateProductMutation();
   const [updateSale] = useUpdateSaleMutation();
   const [deleteSale] = useDeleteSaleMutation();
+  const [writeDataset] = useWriteDatasetMutation();
+  const [makePrediction] = useMakePredictionMutation();
+
   const calculateTotalCost = () => {
     return saleDetails?.reduce((total, item) => total + Number(item.totalCost), 0) || 0;
   };
@@ -84,6 +89,11 @@ const Requests = () => {
             productId: item.productId,
             updatedProduct: { stockQuantity: updatedStock },
           });
+          await writeDataset({
+            name: product.name,
+            quantity: item.quantity,
+            date: new Date().toLocaleDateString("en-GB"),
+          });
         }
       }
 
@@ -91,6 +101,11 @@ const Requests = () => {
         saleId: selectedSaleId,
         updatedSale: { transactionStatusId: 2 },
       });
+
+      // Fetch predictions after confirming the order
+      const prediction = await makePrediction().unwrap();
+      console.log("Prediction:", prediction);
+
       notify("Solicitud confirmada", "success");
     } catch (error) {
       notify("Error al confirmar la solicitud", "error");
@@ -124,6 +139,8 @@ const Requests = () => {
 
   const filteredSales = selectedDate ? sales?.filter((sale) => new Date(sale.created_at).toDateString() === selectedDate.toDateString()) : sales;
 
+  const sortedAndLimitedSales = [...(filteredSales || [])].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 10);
+
   if (salesLoading) {
     return <div className="py-4">Loading...</div>;
   }
@@ -134,23 +151,29 @@ const Requests = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
-        <Header name="Solicitudes de Enfermeria" />
-        <div className="flex gap-4">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Seleccionar fecha" value={selectedDate ? dayjs(selectedDate) : null} onChange={(newValue) => setSelectedDate(newValue ? newValue.toDate() : null)} />
-          </LocalizationProvider>
-          <select onChange={handleSaleChange} className="border rounded p-2">
-            <option value="">Seleccione una solicitud</option>
-            {filteredSales?.map((sale) => (
-              <option
-                key={sale.saleId}
-                value={sale.saleId}
-                className={`${sale.transactionStatusId === 1 ? "bg-blue-100" : sale.transactionStatusId === 3 ? "bg-red-100" : "bg-green-100"}`}
-              >
-                {formatDateTime(sale.created_at)}
-              </option>
-            ))}
-          </select>
+        <div className="flex gap-4 w-full items-center justify-between flex-col lg:flex-row">
+          <Header name="Solicitudes de Enfermeria" />
+          <div className="flex gap-2 flex-col lg:flex-row">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Seleccionar fecha"
+                value={selectedDate ? dayjs(selectedDate) : null}
+                onChange={(newValue) => setSelectedDate(newValue ? newValue.toDate() : null)}
+              />
+            </LocalizationProvider>
+            <select onChange={handleSaleChange} className="border rounded p-2">
+              <option value="">Seleccione una solicitud</option>
+              {sortedAndLimitedSales?.map((sale) => (
+                <option
+                  key={sale.saleId}
+                  value={sale.saleId}
+                  className={`${sale.transactionStatusId === 1 ? "bg-blue-100" : sale.transactionStatusId === 3 ? "bg-red-100" : "bg-green-100"}`}
+                >
+                  {formatDateTime(sale.created_at)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       <div className="flex text-3xl mt-10 w-full items-center justify-center font-bold">

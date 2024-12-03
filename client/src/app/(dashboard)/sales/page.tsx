@@ -82,10 +82,6 @@ const Sales = () => {
     setCart((prevCart) => prevCart.filter((item) => item.product.productId !== productId));
   };
 
-  const getTotal = () => {
-    return formatCurrency(cart.reduce((total, item) => total + item.product.price * item.quantity, 0));
-  };
-
   const getTotalItems = () => {
     return cart.length;
   };

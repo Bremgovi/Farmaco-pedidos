@@ -250,3 +250,9 @@ model TransactionStatus {
   sales     Sales[]
   purchases Purchases[]
 }
+
+model MonthlyBudget {
+  monthlyBudgetId Int     @id @default(autoincrement())
+  month           Int
+  budget          Decimal @db.Decimal(10, 2)
+}

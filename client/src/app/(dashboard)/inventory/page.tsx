@@ -8,7 +8,7 @@ import { Pencil, PlusCircleIcon, Trash2 } from "lucide-react";
 import DeleteProductModal from "../../(components)/Modals/Products/DeleteProductModal";
 import CreateProductModal from "../../(components)/Modals/Products/CreateProductModal";
 import UpdateProductModal from "../../(components)/Modals/Products/UpdateProductModal"; // Import UpdateProductModal
-import { Bounce, ToastContainer } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { withAuth } from "../withAuth";
@@ -111,6 +111,8 @@ const Inventory = () => {
 
   const handleCreateProduct = async (productData: ProductFormData) => {
     await createProduct(productData);
+    refetch();
+    setIsCreateModalOpen(false);
     notify("Producto creado correctamente", "success");
   };
 
@@ -134,6 +136,10 @@ const Inventory = () => {
   const handleRowSelection = (selectionModel: any) => {
     const selectedData = products?.filter((product) => selectionModel.includes(product.productId));
     setSelectedRowIds(selectedData?.map((product) => product.productId) || []);
+  };
+
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true);
   };
 
   const openDeleteModal = () => {
@@ -170,7 +176,7 @@ const Inventory = () => {
           <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openUpdateModal}>
             <Pencil className="text-gray-600" />
           </button>
-          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={() => setIsCreateModalOpen(true)}>
+          <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openCreateModal}>
             <PlusCircleIcon className="text-blue-600" />
           </button>
           <button className="inline-flex justify-center items-center mr-5 hover:bg-red-100 rounded-full p-2" onClick={openDeleteModal}>
@@ -184,6 +190,7 @@ const Inventory = () => {
         getRowId={(row) => row.productId}
         checkboxSelection
         onRowSelectionModelChange={handleRowSelection}
+        rowSelectionModel={selectedRowIds}
         className="bg-gray-100 shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
         sx={{
           "& .MuiDataGrid-columnHeader": {

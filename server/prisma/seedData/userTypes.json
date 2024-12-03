@@ -5,6 +5,14 @@
     },
     {
         "userTypeId": 2,
-        "userType": "User"
+        "userType": "Farmacologia"
+    },
+    {
+        "userTypeId": 3,
+        "userType": "Compras"
+    },
+    {
+        "userTypeId": 4,
+        "userType": "Enfermeria"
     }
 ]

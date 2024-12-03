@@ -1,6 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 
-export const notify = (message: string, type: string) => {
+export const notify = async (message: string, type: string) => {
     if (type == "success") {
       toast.success(message, {
         position: "top-right",

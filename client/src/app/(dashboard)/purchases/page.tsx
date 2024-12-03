@@ -13,11 +13,12 @@ import {
   useGetLoginInfoQuery,
   useGetProductTypesQuery,
   useGetSuppliersQuery,
+  useFetchJsonQuery,
+  useGetMonthlyBudgetQuery,
 } from "@/state/api";
 import { notify } from "@/utils/toastConfig";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
@@ -49,31 +50,36 @@ const Purchases = () => {
   const { data: productTypes } = useGetProductTypesQuery();
   const { data: suppliers } = useGetSuppliersQuery();
   const { data: userData } = useGetLoginInfoQuery();
+  const { data: monthlyBudget } = useGetMonthlyBudgetQuery();
   const [createPurchase] = useCreatePurchaseMutation();
   const [createPurchaseDetails] = useCreatePurchaseDetailsMutation();
+  const { data: predictionsData } = useFetchJsonQuery(selectedDate ? { year: dayjs(selectedDate).year(), month: dayjs(selectedDate).month() + 1 } : { year: 0, month: 0 });
 
+  const currentMonth = dayjs().month() + 1;
+  const currentMonthlyBudget = monthlyBudget?.find((budget) => budget.month === currentMonth);
   const sortedProducts = products?.slice().sort((a, b) => a.name.localeCompare(b.name));
   const filteredProducts = sortedProducts?.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   useEffect(() => {
-    const fetchPredictions = async () => {
-      if (selectedDate) {
-        const month = dayjs(selectedDate).format("YYYY_MM");
-        const response = await fetch(`/json_prediction/predicciones_${month}.json`);
-        const predictions = await response.json();
-        const predictedCart = predictions
-          .map((prediction: any) => {
-            const product = products?.find((p: any) => p.name === prediction.Nombre);
-            return product && prediction.Cantidad > 0 ? { product, quantity: prediction.Cantidad } : null;
-          })
-          .filter((item: any) => item !== null);
-        setCart(predictedCart);
-      }
-    };
-    fetchPredictions();
-  }, [selectedDate, products]);
+    if (selectedDate && predictionsData) {
+      const predictedCart = predictionsData
+        .map((prediction: any) => {
+          const product = products?.find((p: any) => p.name === prediction.NOMBRE);
+          return product && prediction.CANTIDAD > 0 ? { product, quantity: prediction.CANTIDAD } : null;
+        })
+        .filter((item: any) => item !== null);
+      setCart(predictedCart);
+    }
+  }, [selectedDate, predictionsData, products]);
 
   const handleAddToCart = (product: ProductFormDataWithID) => {
+    const newTotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0) + product.price;
+    console.log("Total: " + newTotal);
+    console.log("Budget: " + currentMonthlyBudget?.budget);
+    if (currentMonthlyBudget && newTotal > currentMonthlyBudget.budget) {
+      notify("Error: El total supera el presupuesto mensual", "error");
+      return;
+    }
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.product.productId === product.productId);
       if (existingItem) {
@@ -84,7 +90,15 @@ const Purchases = () => {
   };
 
   const handleQuantityChange = (productId: string, quantity: number) => {
-    setCart((prevCart) => prevCart.map((item) => (item.product.productId === productId ? { ...item, quantity: Math.max(1, quantity) } : item)));
+    const newCart = cart.map((item) => (item.product.productId === productId ? { ...item, quantity: Math.max(1, quantity) } : item));
+    const newTotal = newCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    console.log("Total: " + newTotal);
+    console.log("Budget: " + currentMonthlyBudget?.budget);
+    if (currentMonthlyBudget && newTotal > currentMonthlyBudget.budget) {
+      notify("Error: El total supera el presupuesto mensual", "error");
+      return;
+    }
+    setCart(newCart);
   };
 
   const handleRemoveFromCart = (productId: string) => {
