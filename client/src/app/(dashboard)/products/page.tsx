@@ -4,15 +4,16 @@ import { useCreateProductMutation, useGetProductsQuery, useDeleteProductMutation
 import { PlusCircleIcon, SearchIcon, Pencil, Trash2, CheckSquare, Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import Header from "@/app/(components)/Header";
-import Rating from "@/app/(components)/Rating";
+//import Rating from "@/app/(components)/Rating";
 import CreateProductModal from "../../(components)/Modals/Products/CreateProductModal";
 import DeleteProductModal from "../../(components)/Modals/Products/DeleteProductModal";
 import UpdateProductModal from "../../(components)/Modals/Products/UpdateProductModal";
-import { Bounce, ToastContainer } from "react-toastify";
-import { notify } from "@/utils/toastConfig";
+//import { Bounce, ToastContainer } from "react-toastify";
+//import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import ImageWithFallback from "../../(components)/ImageWithFallback";
 import { withAuth } from "../withAuth";
+import toast, { Toaster } from "react-hot-toast";
 
 type ProductFormData = {
   productTypeId: number;
@@ -72,17 +73,20 @@ const Products = () => {
   const handleCreateProduct = async (productData: ProductFormData) => {
     try {
       await createProduct(productData);
-      notify("Producto creado correctamente", "success");
+      toast.success("Producto creado correctamente");
+      //notify("Producto creado correctamente", "success");
       await refetch();
     } catch (error) {
-      notify("Error al crear producto", "error");
+      toast.error("Error al crear producto");
+      //notify("Error al crear producto", "error");
     }
   };
 
   const handleUpdateProduct = async (productData: ProductFormDataWithID) => {
     if (selectedProduct) {
       await updateProduct({ productId: selectedProduct.productId, updatedProduct: productData });
-      notify("Producto actualizado correctamente", "success");
+      toast.success("Producto actualizado correctamente");
+      //notify("Producto actualizado correctamente", "success");
     }
   };
 
@@ -91,12 +95,14 @@ const Products = () => {
       for (const id of selectedRowIds) {
         await deleteProduct(id);
       }
-      notify("Producto(s) eliminado(s) correctamente", "success");
+      toast.success("Producto(s) eliminado(s) correctamente");
+      //notify("Producto(s) eliminado(s) correctamente", "success");
       setSelectedRowIds([]);
       refetch();
       setIsDeleteModalOpen(false);
     } catch (error) {
-      notify("Error al eliminar productos", "error");
+      toast.error("Error al eliminar productos");
+      //notify("Error al eliminar productos", "error");
     }
   };
 
@@ -106,7 +112,8 @@ const Products = () => {
 
   const openDeleteModal = () => {
     if (selectedRowIds.length === 0) {
-      notify("Por favor, seleccione al menos un producto para eliminar.", "error");
+      toast.error("Por favor, seleccione al menos un producto para eliminar.");
+      //notify("Por favor, seleccione al menos un producto para eliminar.", "error");
       return;
     }
     setIsDeleteModalOpen(true);
@@ -114,7 +121,8 @@ const Products = () => {
 
   const openUpdateModal = () => {
     if (selectedRowIds.length !== 1) {
-      notify("Por favor, seleccione un producto para actualizar.", "error");
+      toast.error("Por favor, seleccione un producto para actualizar.");
+      //notify("Por favor, seleccione un producto para actualizar.", "error");
       return;
     }
     const productToEdit = products?.find((product) => product.productId === selectedRowIds[0]);
@@ -179,11 +187,12 @@ const Products = () => {
                 <p className="text-gray-600 font-semibold">{suppliers?.find((supplier) => supplier.supplierId === product.supplierId)?.name || "Unknown Supplier"}</p>
                 <p className="text-gray-800 mt-5">${Number(product.price).toFixed(2)}</p>
                 <div className="text-sm text-gray-600 mt-1">Stock: {product.stockQuantity}</div>
-                {product.rating && (
+                {/*
+                product.rating && (
                   <div className="flex items-center mt-2">
                     <Rating rating={product.rating} />
                   </div>
-                )}
+                )*/}
               </div>
             </div>
           ))
@@ -194,6 +203,17 @@ const Products = () => {
       <CreateProductModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} onCreate={handleCreateProduct} />
       <DeleteProductModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
       <UpdateProductModal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onUpdate={handleUpdateProduct} product={selectedProduct} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          className: "",
+          style: {
+            padding: "16px",
+          },
+        }}
+      />
+      {/*
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -207,6 +227,7 @@ const Products = () => {
         theme="light"
         transition={Bounce}
       />
+      */}
     </div>
   );
 };

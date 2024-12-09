@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from datetime import timedelta
+from sklearn.metrics import mean_squared_error
 from flask import Flask, jsonify, send_file
 
 app = Flask(__name__, static_folder='static')
@@ -24,11 +24,10 @@ class NpEncoder(json.JSONEncoder):
 def predict():
     #########################################
     # Cargar los datos desde el archivo CSV
-    #########################################c
+    #########################################
     dataset_url = "http://localhost:8000/dataset/MedicamentsDataset.csv"
     local_file_path = "./MedicamentsDataset2.xlsx"
     response = requests.get(dataset_url)
-    print(response)
     if response.status_code == 200:
         with open(local_file_path, 'wb') as file:
             file.write(response.content)
@@ -36,8 +35,8 @@ def predict():
     else:
         print(f"Failed to download dataset. Status code: {response.status_code}")
         exit(1)
+    
     df = pd.read_csv(local_file_path)
-
 
     #########################################
     # PROCESAMIENTO DE DATOS Y ENTRENAMIENTO
@@ -64,17 +63,39 @@ def predict():
 
     # Dividir los datos en conjuntos de entrenamiento y prueba
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # Crear el modelo de predicción
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+
+    # Implementar criterio de paro manual
+    best_model = None
+    min_error = float('inf')
+    tolerance = 0.01  # Cambios mínimos aceptables en el error
+    no_improvement_count = 0
+    max_no_improvement = 5  # Número máximo de iteraciones sin mejora
+    n_estimators_list = range(10, 201, 10)  # Probar diferentes números de árboles
+
+    for n in n_estimators_list:
+        model = RandomForestRegressor(n_estimators=n, random_state=42)
+        model.fit(X_train, y_train)
+        predictions = model.predict(X_test)
+        mse = mean_squared_error(y_test, predictions)
+
+        if min_error - mse > tolerance:
+            min_error = mse
+            best_model = model
+            no_improvement_count = 0
+        else:
+            no_improvement_count += 1
+
+        if no_improvement_count >= max_no_improvement:
+            print(f"Criterio de paro alcanzado en {n} estimadores.")
+            break
+
+    #print(f"Mejor modelo entrenado con error mínimo: {min_error}")
 
     # Crear carpetas para guardar las predicciones
     json_folder = './static/json_prediction'
     os.makedirs(json_folder, exist_ok=True)
 
     try:
-        # Predict for all medications for each month of the current year
         current_date = pd.to_datetime('today')
         anio_pred = current_date.year
 
@@ -88,16 +109,16 @@ def predict():
                 'NOMBRE': medicamentos_unicos
             })
 
-            predicciones = model.predict(X_pred)
+            predicciones = best_model.predict(X_pred)
 
-            # Prepare result DataFrame
+
             resultado = pd.DataFrame({
                 'NOMBRE': X_pred['NOMBRE'].map(NOMBRE_map),
                 'CANTIDAD': predicciones.astype(int),
                 'FECHA': pd.to_datetime(dict(year=X_pred['AÑO'], month=X_pred['MES'], day=[1] * len(X_pred)))
             })
 
-            # Save the DataFrame in a JSON file with readable format
+
             output_file_json = f'{json_folder}/predicciones_{anio_pred}_{mes_pred:02d}.json'
             with open(output_file_json, 'w') as json_file:
                 json.dump(json.loads(resultado.to_json(orient='records', date_format='iso')), json_file, indent=4)
@@ -107,7 +128,7 @@ def predict():
                 'json_file': output_file_json
             })
 
-        # Return JSON response with file paths for all months
+
         return jsonify(all_predictions)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

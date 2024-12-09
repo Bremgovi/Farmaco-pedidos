@@ -71,6 +71,7 @@ const Sidebar = () => {
       case 3:
         return (
           <>
+            <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/orders" icon={Truck} label="Pedidos" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
           </>
@@ -78,6 +79,7 @@ const Sidebar = () => {
       case 4:
         return (
           <>
+            <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
           </>

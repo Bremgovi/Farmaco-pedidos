@@ -199,12 +199,12 @@ export interface MonthlyBudget{
 
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).global.userToken; 
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem('userToken');
+        if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+        return headers;
     },
 });
 

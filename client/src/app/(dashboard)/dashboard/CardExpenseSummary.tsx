@@ -16,7 +16,13 @@ const CardExpenseSummary = () => {
   const expenseByCategorySummary = dashboardMetrics?.expenseByCategorySummary || [];
 
   const expenseSums = expenseByCategorySummary.reduce((acc: ExpenseSums, item: ExpenseByCategorySummary) => {
-    const category = item.category + " Expenses";
+    const translations: { [key: string]: string } = {
+      Office: "Oficina",
+      Professional: "Profesionales",
+      Salaries: "Salarios",
+    };
+    const translatedCategory = translations[item.category] || item.category;
+    const category = "Gastos " + translatedCategory;
     const amount = parseInt(item.amount, 10);
     if (!acc[category]) acc[category] = 0;
     acc[category] += amount;
@@ -76,7 +82,7 @@ const CardExpenseSummary = () => {
               <div className="mt-3 flex justify-between items-center px-7 mb-4">
                 <div className="pt-2">
                   <p className="text-sm">
-                    Average: <span className="font-semibold"> ${Number(expenseSummary.totalExpenses || 0).toFixed(2)}</span>
+                    Promedio: <span className="font-semibold"> ${Number(expenseSummary.totalExpenses || 0).toFixed(2)}</span>
                   </p>
                 </div>
                 <span className="flex items-center mt-2">

@@ -8,6 +8,7 @@ import {
   useUpdateProductMutation,
   useUpdatePurchaseMutation,
   useDeletePurchaseMutation,
+  useWriteDatasetMutation,
 } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -32,6 +33,7 @@ const Orders = () => {
   const [updateProduct] = useUpdateProductMutation();
   const [updatePurchase] = useUpdatePurchaseMutation();
   const [deletePurchase] = useDeletePurchaseMutation();
+  const [writeDataset] = useWriteDatasetMutation();
   const calculateTotalCost = () => {
     return purchaseDetails?.reduce((total, item) => total + Number(item.totalCost), 0) || 0;
   };
@@ -81,6 +83,13 @@ const Orders = () => {
           await updateProduct({
             productId: item.productId,
             updatedProduct: { stockQuantity: updatedStock },
+          });
+
+          // Write dataset entry
+          await writeDataset({
+            date: new Date().toISOString(),
+            quantity: item.quantity,
+            name: product.name,
           });
         }
       }

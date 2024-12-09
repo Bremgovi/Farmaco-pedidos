@@ -160,11 +160,12 @@ const UpdateProductModal = ({ isOpen, onClose, onUpdate, product }: UpdateProduc
           </label>
           <input type="number" name="maximumStock" placeholder="Stock Maximo" onChange={handleChange} value={formData.maximumStock} className={inputCssStyles} required />
 
-          {/* RATING */}
+          {/* RATING 
           <label htmlFor="rating" className={labelCssStyles}>
             Rating
           </label>
           <input type="number" name="rating" placeholder="Rating" onChange={handleChange} value={formData.rating} className={inputCssStyles} required />
+          */}
 
           {/* UPDATE ACTIONS */}
           <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">

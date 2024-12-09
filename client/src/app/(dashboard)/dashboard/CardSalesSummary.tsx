@@ -49,7 +49,7 @@ const CardSalesSummary = () => {
             {/* BODY HEADER */}
             <div className="flex justify-between items-center mb-6 px-7 mt-5">
               <div className="text-lg font-medium">
-                <p className="text-xs text-gray-400">Value</p>
+                <p className="text-xs text-gray-400">Valor</p>
                 <span className="text-2xl font-extrabold">
                   $
                   {(totalValueSum / 1000000).toLocaleString("en", {
@@ -69,9 +69,9 @@ const CardSalesSummary = () => {
                   setTimeframe(e.target.value);
                 }}
               >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
+                <option value="daily">Diario</option>
+                <option value="weekly">Semanal</option>
+                <option value="monthly">Mensual</option>
               </select>
             </div>
             {/* CHART */}
@@ -114,9 +114,9 @@ const CardSalesSummary = () => {
           <div>
             <hr />
             <div className="flex justify-between items-center mt-6 text-sm px-7 mb-4">
-              <p>{salesData.length || 0} days</p>
+              <p>{salesData.length || 0} dias</p>
               <p className="text-sm">
-                Highest Sales Date: <span className="font-bold">{highestValueDate}</span>
+                Fecha con mayor venta: <span className="font-bold">{highestValueDate}</span>
               </p>
             </div>
           </div>

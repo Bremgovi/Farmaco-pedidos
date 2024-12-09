@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { Request, Response } from "express";
-import axios from 'axios';
 
 export const addRegistry = async (
     req: Request,

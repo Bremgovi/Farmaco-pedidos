@@ -3,15 +3,16 @@
 import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation, useUpdateProductMutation, useGetProductTypesQuery, useGetSuppliersQuery } from "@/state/api";
 import Header from "@/app/(components)/Header";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useState } from "react";
-import { Pencil, PlusCircleIcon, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Pencil, PlusCircleIcon, SearchIcon, Trash2 } from "lucide-react";
 import DeleteProductModal from "../../(components)/Modals/Products/DeleteProductModal";
 import CreateProductModal from "../../(components)/Modals/Products/CreateProductModal";
 import UpdateProductModal from "../../(components)/Modals/Products/UpdateProductModal"; // Import UpdateProductModal
-import { Bounce, toast, ToastContainer } from "react-toastify";
-import { notify } from "@/utils/toastConfig";
+//import { Bounce, toast, ToastContainer } from "react-toastify";
+//import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { withAuth } from "../withAuth";
+import toast, { Toaster } from "react-hot-toast";
 
 type ProductFormData = {
   productTypeId: number;
@@ -51,6 +52,28 @@ const Inventory = () => {
 
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductFormDataWithID | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProducts = products?.filter((product) => product.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const columns: GridColDef[] = [
     { field: "productId", headerName: "ID", width: 90 },
@@ -71,13 +94,6 @@ const Inventory = () => {
       type: "number",
       valueGetter: (value, row) => row.price,
       renderCell: (params) => `$${params.value}`,
-    },
-    {
-      field: "rating",
-      headerName: "Calificación",
-      width: 110,
-      type: "number",
-      valueGetter: (value, row) => (row.rating ? row.rating : "N/A"),
     },
     {
       field: "stockQuantity",
@@ -113,13 +129,15 @@ const Inventory = () => {
     await createProduct(productData);
     refetch();
     setIsCreateModalOpen(false);
-    notify("Producto creado correctamente", "success");
+    toast.success("Producto creado correctamente");
+    //notify("Producto creado correctamente", "success");
   };
 
   const handleUpdateProduct = async (productData: ProductFormDataWithID) => {
     if (selectedProduct) {
       await updateProduct({ productId: selectedProduct.productId, updatedProduct: productData });
-      notify("Producto actualizado correctamente", "success");
+      toast.success("Producto actualizado correctamente");
+      //notify("Producto actualizado correctamente", "success");
     }
   };
 
@@ -130,7 +148,8 @@ const Inventory = () => {
     setSelectedRowIds([]);
     refetch();
     setIsDeleteModalOpen(false);
-    notify("Producto eliminado correctamente", "success");
+    toast.success("Producto eliminado correctamente");
+    //notify("Producto eliminado correctamente", "success");
   };
 
   const handleRowSelection = (selectionModel: any) => {
@@ -144,7 +163,7 @@ const Inventory = () => {
 
   const openDeleteModal = () => {
     if (selectedRowIds.length === 0) {
-      notify("Por favor, seleccione al menos un producto para eliminar.", "error");
+      //notify("Por favor, seleccione al menos un producto para eliminar.", "error");
       return;
     }
     setIsDeleteModalOpen(true);
@@ -152,7 +171,7 @@ const Inventory = () => {
 
   const openUpdateModal = () => {
     if (selectedRowIds.length !== 1) {
-      notify("Por favor, seleccione un producto para actualizar.", "error");
+      //notify("Por favor, seleccione un producto para actualizar.", "error");
       return;
     }
     const productToEdit = products?.find((product) => product.productId === selectedRowIds[0]);
@@ -172,7 +191,13 @@ const Inventory = () => {
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
         <Header name="Inventario" />
-        <div className="flex gap-4">
+        <div className="mb-6 w-1/2">
+          <div className="flex items-center border-2 border-gray-200 rounded">
+            <SearchIcon className="w-5 h-5 text-gray-500 m-2" />
+            <input className="w-full py-2 px-4 rounded bg-white" placeholder="Buscar productos..." value={searchQuery} onChange={handleSearchChange} />
+          </div>
+        </div>
+        <div className={`flex gap-4 ${isScrolled ? "fixed top-4 right-4 bg-white shadow-lg rounded-md p-3 z-50 pr-0 pl-5" : ""}`}>
           <button className="inline-flex justify-center items-center hover:bg-blue-100 rounded-full p-2" onClick={openUpdateModal}>
             <Pencil className="text-gray-600" />
           </button>
@@ -185,7 +210,7 @@ const Inventory = () => {
         </div>
       </div>
       <DataGrid
-        rows={products}
+        rows={filteredProducts}
         columns={columns}
         getRowId={(row) => row.productId}
         checkboxSelection
@@ -203,6 +228,18 @@ const Inventory = () => {
       <DeleteProductModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
       <CreateProductModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} onCreate={handleCreateProduct} />
       <UpdateProductModal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onUpdate={handleUpdateProduct} product={selectedProduct} />
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          className: "",
+          style: {
+            padding: "16px",
+          },
+        }}
+      />
+      {/*
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -216,6 +253,7 @@ const Inventory = () => {
         theme="light"
         transition={Bounce}
       />
+      */}
     </div>
   );
 };

@@ -177,11 +177,12 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
           </label>
           <input type="number" name="maximumStock" placeholder="Stock Maximo" onChange={handleChange} value={formData.maximumStock} className={inputCssStyles} required min="0" />
 
-          {/* RATING */}
+          {/* RATING 
           <label htmlFor="rating" className={labelCssStyles}>
             Rating
           </label>
           <input type="number" name="rating" placeholder="Rating" onChange={handleChange} value={formData.rating} className={inputCssStyles} required min="1" max="5" />
+          */}
 
           {/* CREATE ACTIONS */}
           <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">

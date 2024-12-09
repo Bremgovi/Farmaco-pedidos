@@ -72,8 +72,14 @@ const Purchases = () => {
     }
   }, [selectedDate, predictionsData, products]);
 
+  const getUnformattedTotal = (cart: { product: ProductFormDataWithID; quantity: number }[]) => {
+    return cart.reduce((total, item) => total + Number(item.product.price) * Number(item.quantity), 0);
+  };
+
   const handleAddToCart = (product: ProductFormDataWithID) => {
-    const newTotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0) + product.price;
+    //const newTotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0) + product.price;
+    const newCart = [...cart];
+    const newTotal = getUnformattedTotal(newCart);
     console.log("Total: " + newTotal);
     console.log("Budget: " + currentMonthlyBudget?.budget);
     if (currentMonthlyBudget && newTotal > currentMonthlyBudget.budget) {
@@ -91,7 +97,7 @@ const Purchases = () => {
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     const newCart = cart.map((item) => (item.product.productId === productId ? { ...item, quantity: Math.max(1, quantity) } : item));
-    const newTotal = newCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    const newTotal = getUnformattedTotal(newCart);
     console.log("Total: " + newTotal);
     console.log("Budget: " + currentMonthlyBudget?.budget);
     if (currentMonthlyBudget && newTotal > currentMonthlyBudget.budget) {
@@ -115,6 +121,11 @@ const Purchases = () => {
 
   const handlePurchase = async () => {
     try {
+      const newTotal = getUnformattedTotal(cart);
+      if (currentMonthlyBudget && newTotal > currentMonthlyBudget.budget) {
+        notify("Error: El total supera el presupuesto mensual", "error");
+        return;
+      }
       if (!userData?.userId) {
         notify("Error: Usuario no identificado", "error");
         return;
@@ -220,6 +231,7 @@ const Purchases = () => {
         ) : (
           <>
             <div className="my-5 text-xl font-semibold">Total: {getTotal()}</div>
+            <div className="my-5 text-xl font-semibold text-gray-400">Presupuesto: {formatCurrency(Number(currentMonthlyBudget?.budget) || 0)}</div>
             <ul className="max-h-64 lg:max-h-96 overflow-y-auto scrollbar-rounded">
               {filteredCart.map((item) => (
                 <div key={item.product.productId} className="flex gap-5 items-center bg-slate-300 p-2 rounded-md mb-2">

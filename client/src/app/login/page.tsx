@@ -1,32 +1,18 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useLoginMutation } from "../../state/api";
 import { notify } from "@/utils/toastConfig";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce, ToastContainer } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { login as loginAction } from "@/state";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "../redux";
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const token = useAppSelector((state) => state.global.userToken);
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-  /*
-  useEffect(() => {
-    if (token) {
-      console.log(token);
-      router.push("/dashboard");
-    }
-  }, [token]);
-  */
   const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -36,7 +22,8 @@ const Login = () => {
       console.log("Login successful, token:", result.token);
       notify("Login Succesful", "success");
 
-      dispatch(loginAction({ userInfo: { username: formData.username, password: formData.password }, userToken: result.token }));
+      // Store token in local storage
+      localStorage.setItem("userToken", result.token);
 
       setTimeout(() => {
         router.push("/dashboard");

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Header from "@/app/(components)/Header";
-import { logout, logoutUser, setIsDarkMode } from "@/state";
+import { setIsDarkMode } from "@/state";
 import { notify } from "@/utils/toastConfig";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { useRouter } from "next/navigation";
@@ -22,13 +22,14 @@ const mockSettings: UserSetting[] = [
   { label: "Email", value: "john.doe@example.com", type: "text" },
   { label: "Notificaciones", value: true, type: "toggle" },
   { label: "Modo Oscuro", value: false, type: "toggle" },
-  { label: "Lenguaje", value: "English", type: "text" },
+  { label: "Lenguaje", value: "Español", type: "text" },
 ];
 
 const Settings = () => {
   const [userSettings, setUserSettings] = useState<UserSetting[]>(mockSettings);
   const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const router = useRouter();
   const toggleDarkMode = () => {
     dispatch(setIsDarkMode(!isDarkMode));
   };
@@ -59,13 +60,12 @@ const Settings = () => {
     setUserSettings(updatedSettings);
   }, [isDarkMode]);
 
-  const router = useRouter();
-
   const handleLogout = () => {
-    dispatch(logout());
+    localStorage.removeItem("userToken");
     notify("Logged out", "success");
     setTimeout(() => {
       router.push("/login");
+      window.location.reload(); // Add this line to reload the page
     }, 3000);
   };
 

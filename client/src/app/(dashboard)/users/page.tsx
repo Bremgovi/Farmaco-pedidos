@@ -11,8 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import CreateUserModal from "../../(components)/Modals/Users/CreateUserModal";
 import DeleteUserModal from "../../(components)/Modals/Users/DeleteUserModal";
 import UpdateUserModal from "../../(components)/Modals/Users/UpdateUserModal";
-import { useAppSelector } from "@/app/redux";
-import { useRouter } from "next/navigation";
 import { withAuth } from "../withAuth";
 
 type UserFormData = {
@@ -31,15 +29,8 @@ type UserFormDataWithId = {
 };
 
 const Users = () => {
-  const router = useRouter();
   const { data: users, isError, isLoading, refetch } = useGetUsersQuery();
   const { data: userTypes } = useGetUserTypesQuery();
-  const userToken = useAppSelector((state) => state.global.userToken);
-
-  console.log(userToken);
-  if (userToken == null) {
-    router.push("/login");
-  }
 
   const [deleteUser] = useDeleteUserMutation();
   const [createUser] = useCreateUserMutation();
