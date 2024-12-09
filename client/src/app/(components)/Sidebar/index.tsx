@@ -64,7 +64,6 @@ const Sidebar = () => {
             <SidebarLink href="/inventory" icon={Archive} label="Inventario" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/products" icon={Clipboard} label="Productos" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/purchases" icon={ShoppingCart} label="Realizar pedido" isCollapsed={isSidebarCollapsed} />
-            <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
           </>
         );
@@ -81,6 +80,7 @@ const Sidebar = () => {
           <>
             <SidebarLink href="/dashboard" icon={Layout} label="Tablero" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/sales" icon={Mail} label="Realizar solicitud" isCollapsed={isSidebarCollapsed} />
+            <SidebarLink href="/requests" icon={BookOpenText} label="Solicitudes" isCollapsed={isSidebarCollapsed} />
             <SidebarLink href="/settings" icon={SlidersHorizontal} label="Configuraciones" isCollapsed={isSidebarCollapsed} />
           </>
         );
